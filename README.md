@@ -28,7 +28,6 @@ detail.
 
 ```
 const modelUrl = 'url/to/ml/model';
-const modelFormat = MLInference.ONNX;  # or TF_Lite, eg
 var exampleList = [{
   'Feature1': value1,
   'Feature2': value2
@@ -38,7 +37,7 @@ var options = {
 };
 
 const mli = new MLInference();
-const model = await mli.load(modelUrl, modelFormat)
+const model = await mli.load(modelUrl)
 model.infer(exampleList, options)
   .then(inferences => inferences.forEach(result => console.log(result)))
   .catch(e => {
