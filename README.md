@@ -96,7 +96,8 @@ devices.
 There are a few reasons:
 
 *   Most web developers just want to perform inference on a pre-trained model. They don’t need to construct a model in
-    JavaScript, so the web platform API surface doesn’t need to include all of those operations, and web developers wouldn’t use them directly.
+    JavaScript, so the web platform API surface doesn’t need to include all of those operations, and web developers wouldn’t 
+    use them directly.
 *   Only a small number of ML library authors would actually use a graph API directly. The library authors would in turn 
     create the inference API that web developers want.
 *   A graph API would have a very large API surface, and the operations in it are rapidly evolving. It’s easier to let a 
@@ -111,7 +112,26 @@ There are a few reasons:
     shortcomings.
 
 
-## What kinds of machine learning could this support?
+## Why does the TensorFlow team not recommend standardizing on a graph API like the Neural Network API?
+
+The short answer is that ML is evolving too quickly, and the graph and operation level of abstraction has been too unstable.
+Even with an operating system that a single company largely controls, on devices that have a relatively short lifespan, the
+graph model has not worked out. Given that the web requires compatibility for much longer timeframes, and is developed by
+a community, the TensorFlow team believes that what has not worked for Android is even less likely to work for the web.
+
+This same concern applies to model formats for an inference API that are graph and operation-based. In the time since
+TensorFlow launched, the number of operations has grown rapidly. The field of ML is rapidly changing, and new capabilities
+are approaches are published daily. Any graph or operation-based approach is going to face an ongoing challenge of
+standardizing and evolving. It's not possible to design a great API, ship, and be done, and know that the API will endure.
+Its surface will need to be continually added to, and parts of it will fall into disuse as the field finds better approaches.
+This isn't the type of API that lends itself to massive scale deployment with backwards compabibility guarantees.
+
+The Android and TensorFlow teams have the experience of shipping an API to hundreds of millions of devices, supporting it,
+and evolving it. The fact that they have decided against a graph API and against operation sets as the level of abstraction
+going forward ought to be a strong caution against following the same path for web standards.
+
+
+## What kinds of machine learning could an inference API support?
 
 The idea is to support any type, such as image classification, binary classification, logistic regression, sequence models, 
 or ranking.
@@ -120,20 +140,79 @@ The API signature, inputs, and outputs would need to be carefully reviewed to ma
 types.
 
 
-## What model formats are supported?
+## What are the requirements for the model format(s)?
 
-The model format must be:
+Any supported model format must be:
 
 *   An open standard, without IP restrictions
 *   Versioned
 *   Backwards compatible (or else translatable)
+*   Vendor neutral
+
+In order for a model format to endure, it must also be:
+
+*   At the right level of abstraction
+
+
+## What is the right level of abstraction for the model format?
+
+The model format could be:
+
+1. A set of operations with a graph
+2. Hardware-specific instructions
+3. An intermediate representation
 
 The most widely used open-source formats are PyTorch’s and TensorFlow’s. There’s also Keras, which is supported by 
 TensorFlow, Theano, and CNTK. And there’s ONNX, which is intended to be convertible to and from other frameworks like 
 PyTorch and TensorFlow. For all of these model formats, there are issues around backwards compatibility, and a translation 
-layer may be required to ensure models continue to run in the future.
+layer may be required to ensure models continue to run in the future. All of these currently popular formats are based on
+the same premise: enumerating a set of operations and encoding them, often in protocol buffers). This level of abstraction
+is exactly what the TensorFlow team recommends against, and is moving away from.
 
-The web could standardize on:
+Ultimately, performance will depend upon hardware-specific instructions. But that's not the right level of abstraction for
+the web, since the web platform needs to be hardware-independent.
+
+An intermediate representation has the potential to address the limitations of operation sets and hardware-specific
+instructions. One example of an intermediate representations is
+MLIR (multi-layer intermediate representation)](https://mlir.llvm.org/), which is part of the LLVM foundation.
+
+Potential benefits:
+
+*   Extensible: New operations can be compiled into the same intermediate representation, without changes to the spec
+*   Performant: Because it's closer to the metal, it can perform better than operation sets.
+*   Custom ops can be defined in the intermediate representation, instead of JavaScript
+
+
+## Why not adopt MLIR today?
+
+If an intermediate representation like MLIR is the right approach for the web, why not standardize on it today?
+
+*   It isn't ready. It's very much a work in progress.
+*   It doesn't yet have support from ML frameworks other than TensorFlow.
+
+These are pretty serious barriers. MLIR could be the right long-term solution, but it can't be adopted today.
+
+
+## Is an inference API blocked on MLIR or an alternative intermediate representation becoming a standard?
+
+Not necessarily. It's possible that the shape of the API could be standardized on, without the details of an IR being
+resolved yet. The community group could proceed with an existing operation-level representation, like ONNX or TFlite.
+Perhaps by the time the browser vendors are ready to ship, an IR will be ready.
+
+Alternatively, browsers could ship an operation-based format sooner, and an IR later. The operation-based format could
+be experimental, and never ship without a flag. Or the web platform could support both kinds of format, indefinitely,
+and let developers choose which to use. Over time, the IR may become more popular.
+
+Options:
+
+A. Wait for an IR to become a standard before shipping anything; ship only an IR format.
+B. Ship an experimental API based on an operation-level format. Wait for IR before shipping to production.
+C. Ship an operation-based format, and later deprecate it and support an IR instead.
+D. Ship an operation-based format, and later add a second format that is an IR.
+
+Option C is maybe the least appealing and feasible.
+
+For either level of abstraction, whether an operation-based format, or an IR, the web could standardize on:
 
 1. A single canonical model format, used on all devices by all browsers.
 2. A single canonical model format, supported by all devices, and optional additional formats, that may not be supported on 
@@ -143,13 +222,18 @@ The web could standardize on:
    same underlying inference engine.
 4. A set of permissible model formats, all optional. Each device supports zero or more formats.
 
-If a single canonical model format is adopted, browser vendors could optionally support additional formats. There are 
-multiple reasons they might want to do this:
+In principle, it would be great to standardize on a single format, and a single level of abstraction.
+
+If a single canonical model format is adopted at a given level of abstraction, browser vendors could optionally
+support additional formats. There are multiple reasons they might want to do this:
 
 *   As a way to try out new functionality not yet supported in the standard
 *   For performance, to avoid a conversion step from the interop format to the internally used format, if the conversion is 
     expensive.
 *   As a hedge in case the standard interoperable format doesn’t evolve quickly enough
+
+In principle, an IR would address these concerns, and they would mostly only apply to operation-based APIs, due to the
+rapid evolution of ML and need for new operations.
 
 If multiple formats are supported, web developers will have a more complicated time, but maybe it’s not totally horrible. 
 Developers already serve different images for different screen resolutions. It might not be such a burden to ship different 
@@ -157,8 +241,8 @@ ML models for different devices, if the tooling exists to create those different
 to ship different models per device anyway due to differences in memory and CPU. For example, they might ship a smaller 
 model on a mobile device, and a larger, more accurate model for desktop. As long as the model format is browser-independent, 
 it might be ok. In other words, it might be ok if a web site needs to serve WinML for Windows desktop, CoreML for iOS, and 
-TensorFlow for Android, as long as those models work with the API in Edge, Firefox, Safari, and Chrome, and there’s any easy 
-enough way to create the models in the necessary formats.
+TensorFlow for Android, as long as those models work with the same API in Edge, Firefox, Safari, and Chrome, and there’s
+an easy enough way to create the models in the necessary formats.
 
 
 ## How can web developers protect their proprietary ML models?
