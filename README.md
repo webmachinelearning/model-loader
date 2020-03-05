@@ -38,7 +38,8 @@ var options = {
 
 const mli = new MLInference();
 const model = await mli.load(modelUrl)
-model.infer(exampleList, options)
+const compiledModel = await model.compile()
+compiledModel.predict(exampleList, options)
   .then(inferences => inferences.forEach(result => console.log(result)))
   .catch(e => {
     console.error("Inference failed: " + e);
