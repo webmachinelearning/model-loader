@@ -1,6 +1,6 @@
-# Web ML Inference Explained
+# Web ML Model Loader API Explainer
 
-**ML Inference** is a proposed web API to load a custom, pre-trained machine learning model in a standard format, compile
+**Model Loader** is a proposed web API to load a custom, pre-trained machine learning model in a standard format, compile
 it for the available hardware, and apply it to example data in JavaScript in order to perform inference, like classification, 
 regression, or ranking. The idea is to make it as easy as possible for web developers to use a custom, pre-built machine learning model in their web app, across devices and browsers. 
 
@@ -14,10 +14,10 @@ The API is modeled after existing inference APIs like TensorFlow Serving, Clippe
 are already widely used by many products and organizations for large volumes of requests. Using an API that’s similar to a 
 server-based API makes it easier to switch between server-based and local-based inference.
 
-Unlike the Shape Detection API, ML Inference APIs are generic. Application-specific libraries and APIs could be built on 
+Unlike the Shape Detection API, the model loader APIs are generic. Application-specific libraries and APIs could be built on 
 top.
 
-ML Inference does not support training a model, modifying a model, federated learning, or other functionality. Maybe future 
+The API does not support training a model, modifying a model, federated learning, or other functionality. Maybe future 
 APIs could address those, if useful.
 
 The underlying implementation can use any hardware acceleration available on the device, as an internal implementation 
@@ -57,15 +57,15 @@ large and small, serving billions of inference requests per day.
 ## Why not just use a machine learning library like brain.js or tensorflow.js?
 
 You totally can. In fact, those libraries could function as a polyfill for browsers that don’t yet support a standard 
-inference API.
+model loader API.
 
 It’s possible that in the relatively near future, the operating system on every new phone, laptop, server, and other device 
-will ship with a built-in ML inference engine that takes advantage of the underlying hardware. That ML inference software 
+will ship with a built-in ML engine that takes advantage of the underlying hardware. That ML inference software 
 will have the support of the OS authors, will provide versioning, and will be heavily optimized. In that hypothetical future 
 world, it wouldn’t make much sense to ship a duplicate copy of the same functionality, likely in a worse-performing 
 implementation. 
 
-The benefits of a built-in Inference API are:
+The benefits of a built-in model loader API are:
 
 *   Friendlier developer experience.
 *   Operating system-level code can implement the API in C++, and the web can provide an API to access it. By contrast, 
@@ -99,9 +99,9 @@ There are a few reasons:
     JavaScript, so the web platform API surface doesn’t need to include all of those operations, and web developers wouldn’t 
     use them directly.
 *   Only a small number of ML library authors would actually use a graph API directly. The library authors would in turn 
-    create the inference API that web developers want.
+    create the model loader API that web developers want.
 *   A graph API would have a very large API surface, and the operations in it are rapidly evolving. It’s easier to let a 
-    model format evolve than to codify it in web platform APIs.
+    model format evolve than to codify it in JavaScript APIs.
 *   Building the complete graph representation into a JavaScript API means it can’t be used for proprietary models. The 
     entire model can be accessed by JavaScript. That said, a DRM-like solution for protected models would be very hard.
 *   Standardizing at the graph level will further fragment the web, at the level where web developers write their application 
@@ -119,19 +119,19 @@ Even with an operating system that a single company largely controls, on devices
 graph model has not worked out. Given that the web requires compatibility for much longer timeframes, and is developed by
 a community, the TensorFlow team believes that what has not worked for Android is even less likely to work for the web.
 
-This same concern applies to model formats for an inference API that are graph and operation-based. In the time since
+This same concern applies to model formats for a model loader API that are ML operation-based. In the time since
 TensorFlow launched, the number of operations has grown rapidly. The field of ML is rapidly changing, and new capabilities
 are approaches are published daily. Any graph or operation-based approach is going to face an ongoing challenge of
 standardizing and evolving. It's not possible to design a great API, ship, and be done, and know that the API will endure.
 Its surface will need to be continually added to, and parts of it will fall into disuse as the field finds better approaches.
 This isn't the type of API that lends itself to massive scale deployment with backwards compabibility guarantees.
 
-The Android and TensorFlow teams have the experience of shipping an API to hundreds of millions of devices, supporting it,
-and evolving it. The fact that they have decided against a graph API and against operation sets as the level of abstraction
-going forward ought to be a strong caution against following the same path for web standards.
+The Android and TensorFlow teams have had experience shipping an API to hundreds of millions of devices, supporting it,
+and evolving it. The fact that they have decided against tensor operations as the level of abstraction
+going forward ought to be a caution against following the same path for web standards.
 
 
-## What kinds of machine learning could an inference API support?
+## What kinds of machine learning could a model loader API support?
 
 The idea is to support any type, such as image classification, binary classification, logistic regression, sequence models, 
 or ranking.
@@ -165,11 +165,11 @@ The model format could be:
 Recommended, in the long-term: 3. A near to mid-term solution could be 1.
 
 The most widely used open-source formats are PyTorch’s and TensorFlow’s. There’s also Keras, which is supported by 
-TensorFlow, Theano, and CNTK. And there’s ONNX, which is intended to be convertible to and from other frameworks like 
+TensorFlow, Theano, and CNTK. Also of note is ONNX, which is intended to be convertible to and from other frameworks like 
 PyTorch and TensorFlow. For all of these model formats, there are issues around backwards compatibility, and a translation 
 layer may be required to ensure models continue to run in the future. All of these currently popular formats are based on
-the same premise: enumerating a set of operations and encoding them, often in protocol buffers). This level of abstraction
-is exactly what the TensorFlow team recommends against, and is moving away from.
+the same premise: enumerating a set of high-level operations and encoding them, often in protocol buffers). This level
+of abstractionis exactly what the TensorFlow team recommends against, and is moving away from.
 
 Ultimately, performance will depend upon hardware-specific instructions. But that's not the right level of abstraction for
 the web, since the web platform needs to be hardware-independent.
@@ -193,12 +193,12 @@ satisfy the web vision of exposing browser internals at the lowest level.
 If an intermediate representation like MLIR is the right approach for the web, why not standardize on it today?
 
 *   It isn't ready. It's very much a work in progress.
-*   It doesn't yet have support from ML frameworks other than TensorFlow.
+*   Proof-of-concept support exists for TensorFlow, PyTorch, and ONNX using XLA HLO, but 's not production-ready.
 
 These are pretty serious barriers. MLIR could be the right long-term solution, but it can't be adopted today.
 
 
-## Is an inference API blocked on MLIR or an alternative intermediate representation becoming a standard?
+## Is a model loader API blocked on MLIR or an alternative intermediate representation becoming a standard?
 
 Not necessarily. It's possible that the shape of the API could be standardized on, without the details of an IR being
 resolved yet. The community group could proceed to implement using an existing operation-level representation, like ONNX
@@ -227,10 +227,9 @@ For either level of abstraction, whether an operation-based format, or an IR, th
    same underlying inference engine.
 4. A set of permissible model formats, all optional. Each device supports zero or more formats.
 
-Recommended: Long-term, option 1 is the ideal. Near to mid-term, 2 unblocks the developers and OS and ML framework authors. 
+Recommended: Long-term, option 1 is the ideal. Near to mid-term, 2 unblocks developers and OS and ML framework authors. 
 
 In principle, it would be great to standardize on a single format, and a single level of abstraction.
-
 If a single canonical model format is adopted at a given level of abstraction, browser vendors could optionally
 support additional formats. There are multiple reasons they might want to do this:
 
@@ -239,16 +238,16 @@ support additional formats. There are multiple reasons they might want to do thi
     expensive.
 *   As a hedge in case the standard interoperable format doesn’t evolve quickly enough
 
-In principle, an IR would address these concerns, and they would mostly only apply to operation-based APIs, due to the
-rapid evolution of ML and need for new operations.
+In principle, an IR would address these concerns, and they would mostly only apply to higher-level operation-based APIs,
+due to the rapid evolution of ML and need for new operations.
 
 If multiple formats are supported, web developers will have a more complicated time, but maybe it’s not totally horrible. 
 Developers already serve different images for different screen resolutions. It might not be such a burden to ship different 
 ML models for different devices, if the tooling exists to create those different models. In practice, developers may need 
 to ship different models per device anyway due to differences in memory and CPU. For example, they might ship a smaller 
 model on a mobile device, and a larger, more accurate model for desktop. As long as the model format is browser-independent, 
-it might be ok. In other words, it might be ok if a web site needs to serve WinML for Windows desktop, CoreML for iOS, and 
-TensorFlow for Android, as long as those models work with the same API in Edge, Firefox, Safari, and Chrome, and there’s
+it might be ok. In other words, it might be ok if a web site needs to serve ONNX for Windows desktop, CoreML for iOS, and 
+TFlite for Android, as long as those models work with the same API in Edge, Firefox, Safari, and Chrome, and there’s
 an easy enough way to create the models in the necessary formats.
 
 
@@ -257,24 +256,26 @@ an easy enough way to create the models in the necessary formats.
 Short answer: they can’t, under this initial proposal.
 
 But eventually this may need to be solved somehow. Data is often proprietary, and companies and organizations consider the ML 
-model to be IP. For server-based inference, the model need never leave the remote server, which provides at least some level 
-of protection.
+model to be IP. For server-based inference, the model never needs to leave the remote server, which provides at least
+some level of protection.
 
 For OS vendors, there could be a way to specify local URLs that cannot be read from JavaScript. Eg, a URL scheme like ml://.
-There may well be other solutions.
+There may well be other solutions. Creating a new URL scheme is not very appealing.
 
 For web applications, maybe there’s a more DRM-like solution. Maybe the browser could have an encrypted model download space 
 that’s write-only, and it could fetch the remotely stored model over a secure connection. Once downloaded, the model could be 
 referenced, but no JavaScript library could read or access the contents. Only the internal implementation code could access 
 the model directly. 
 
+This requires further thought, by experts.
+
 
 ## How would a browser vendor actually implement the API?
 
 Naively, the hope is that the implementation would be a thin wrapper over native code that runs on the operating
-system. For example, the underlying ML implementation could be provided by WinML on Windows, the NN API on Android,
-CoreML on iOS, and ML Service in Chrome OS. The browser development team would not need much ML expertise in order to 
-implement the API.
+system. For example, the underlying ML implementation could be provided by WinML on Windows, the NN API or future MLIR API
+on Android, CoreML on iOS, and ML Service in Chrome OS. The browser development team would not need much ML expertise in
+order to implement the API.
 
 After discussions with browser experts, it's clear that the browser needs to deeply understand the model and its
 internals, in order to avoid executing untrusted code. Only after parsing and validating thoroughly would a handoff to
@@ -291,7 +292,7 @@ render older ones obsolete very quickly.
 Also, retraining often is important for some applications in order to maintain model freshness. For example, any rankings 
 that consider recency or trends will need to be based on fresh models. If developers update their models often, there 
 wouldn’t be a need to support old model formats, beyond the most recent version or two. It could even be built into the spec 
-that no model older than [1 year] is guaranteed to work.
+that no model older than, eg, 1 year is guaranteed to work.
 
 Even with frequent retraining, the model format needs to be versioned and there needs to be a way to maintain compatibility 
 across subsequent releases. Implementations have to deal with parsing the model format and converting as needed. 
@@ -311,9 +312,7 @@ changing even faster, because new data is constantly becoming available. It’s 
 underlying code will be different for different end users. The goal is to give access to hardware acceleration where 
 available, and to minimize the burden of using custom ML models.
 
-The challenge with this approach is that the ML model format holds the complexity. A browser could bundle a runtime 
-(like TF Lite) or full TensorFlow, and upgrade versions with each release, roughly once every 6 weeks for Chrome. 
-Upgrades aren’t the issue. Backwards and forwards compatibility are. Forwards compatibility is an issue, since models may be 
+The challenge is that the ML model format holds the complexity. Forwards compatibility is an issue, since models may be 
 trained with newer versions of the ML frameworks, and browsers may lag several weeks or more behind.
 
 
@@ -345,23 +344,23 @@ for fingerprinting.
 ## Is it too high level to ever get agreement and ship?
 
 A trend in web standards is to focus on small, low level APIs that are primarily used internally by JavaScript libraries and 
-frameworks, which in turn provide higher level conveniences to web developers. An argument made in defense of the low level 
+frameworks, which in turn provide higher level conveniences to web developers. An argument made in support of the low level 
 focus is that the low level APIs unlock the higher level capabilities. Those higher level layers are often heavily focused 
 on ergonomics and stylistic preferences, and it’s better to let client libraries figure those things out.
 
-An ML Inference API is lower level than the Shape Detection APIs, and higher level than WebGL and WebGPU.
+An model loader API is lower level than the Shape Detection APIs, and higher level than WebGL and WebGPU.
 
 Web developers do not typically produce their own ML models. They receive models, created by a data scientist, and add them 
 to a web app. It’s analogous to how web developers receive images created by a graphic designer and add them to a page. The 
-ML Inference API is a low-level, generic API, like an image tag. The web platform could have evolved without an image tag, 
+model loader API is a low-level, generic API, like an image tag. The web platform could have evolved without an image tag, 
 and instead offered only a canvas and a byte array input stream reader. But then web developers would be dependent on image 
 rendering libraries built on top of those primitives, each with its own supported image formats, buffering behavior, and 
-rendering. With access to a standard image tag, with standard image formats supported in all the browsers, developers and 
-hobbyists were able to create content easily. Maybe ML inference is a similarly fundamental building block for the future of 
-the intelligent web. 
+rendering. With access to a standard image tag, and standard image formats supported in all the browsers (even though not
+prescribed by the spec!), developers and hobbyists were able to create content easily. Maybe ML model loading is a similarly
+fundamental building block for the future of the intelligent web. 
 
-The existence of widely adopted ML inference APIs like TensorFlow Serving suggests that an API at this level of abstraction 
+The existence of widely adopted model serving APIs like TensorFlow Serving suggests that an API at this level of abstraction 
 is broadly useful and can be standardized.
 
-The internals of an Inference API could also stabilize to the point where exposing them directly to web developers makes
-sense.
+The internals of a model loader API could also stabilize to the point where exposing the low-level instructions or operations
+directly to web developers makes sense.
