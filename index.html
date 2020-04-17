@@ -1214,7 +1214,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version e86d5b1b47a216fa66165c234892adc259212183" name="generator">
   <link href="https://webmachinelearning.github.io/model-loader/" rel="canonical">
-  <meta content="c8fab4cc95628374967cd69d4f88569dc7992c2e" name="document-revision">
+  <meta content="095c43c27d70dae31c08e1d8cdbd3c25282f82f0" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1424,7 +1424,7 @@ pre .property::before, pre .property::after {
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Model Loader API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-16">16 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-17">17 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1480,8 +1480,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
    <p>For the introduction and use cases, please see the <a href="https://github.com/webmachinelearning/model-loader/blob/master/explainer.md">explainer.md</a>.</p>
    <h2 class="heading settled" data-level="2" id="api"><span class="secno">2. </span><span class="content">API</span><a class="self-link" href="#api"></a></h2>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="mlinference"><code><c- g>MLInference</c-></code><a class="self-link" href="#mlinference"></a></dfn> {
-    <dfn class="idl-code" data-dfn-for="MLInference" data-dfn-type="constructor" data-export data-lt="MLInference()|constructor()" id="dom-mlinference-mlinference"><code><c- g>constructor</c-></code><a class="self-link" href="#dom-mlinference-mlinference"></a></dfn>();  
+<pre class="idl highlight def"><c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="modelloader"><code><c- g>ModelLoader</c-></code><a class="self-link" href="#modelloader"></a></dfn> {
+    <dfn class="idl-code" data-dfn-for="ModelLoader" data-dfn-type="constructor" data-export data-lt="ModelLoader()|constructor()" id="dom-modelloader-modelloader"><code><c- g>constructor</c-></code><a class="self-link" href="#dom-modelloader-modelloader"></a></dfn>();
+    // TBD
 };
 </pre>
    <h2 class="heading settled" data-level="3" id="examples"><span class="secno">3. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
@@ -1494,8 +1495,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   maxResults <c- o>=</c-> <c- mi>5</c->
 <c- p>};</c->
 
-<c- kr>const</c-> mli <c- o>=</c-> <c- k>new</c-> MLInference<c- p>();</c->
-<c- kr>const</c-> model <c- o>=</c-> await mli<c- p>.</c->load<c- p>(</c->modelUrl<c- p>)</c->
+<c- kr>const</c-> modelLoader <c- o>=</c-> <c- k>new</c-> ModelLoader<c- p>();</c->
+<c- kr>const</c-> model <c- o>=</c-> await modelLoader<c- p>.</c->load<c- p>(</c->modelUrl<c- p>)</c->
 <c- kr>const</c-> compiledModel <c- o>=</c-> await model<c- p>.</c->compile<c- p>()</c->
 compiledModel<c- p>.</c->predict<c- p>(</c->exampleList<c- p>,</c-> options<c- p>)</c->
   <c- p>.</c->then<c- p>(</c->inferences <c- p>=></c-> inferences<c- p>.</c->forEach<c- p>(</c->result <c- p>=></c-> console<c- p>.</c->log<c- p>(</c->result<c- p>)))</c->
@@ -1653,9 +1654,9 @@ compiledModel<c- p>.</c->predict<c- p>(</c->exampleList<c- p>,</c-> options<c- p
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-mlinference-mlinference">constructor()</a><span>, in §2</span>
-   <li><a href="#mlinference">MLInference</a><span>, in §2</span>
-   <li><a href="#dom-mlinference-mlinference">MLInference()</a><span>, in §2</span>
+   <li><a href="#dom-modelloader-modelloader">constructor()</a><span>, in §2</span>
+   <li><a href="#dom-modelloader-modelloader">ModelLoader()</a><span>, in §2</span>
+   <li><a href="#modelloader">ModelLoader</a><span>, in §2</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -1664,8 +1665,9 @@ compiledModel<c- p>.</c->predict<c- p>(</c->exampleList<c- p>,</c-> options<c- p
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def"><c- b>interface</c-> <a href="#mlinference"><code><c- g>MLInference</c-></code></a> {
-    <a href="#dom-mlinference-mlinference"><code><c- g>constructor</c-></code></a>();  
+<pre class="idl highlight def"><c- b>interface</c-> <a href="#modelloader"><code><c- g>ModelLoader</c-></code></a> {
+    <a href="#dom-modelloader-modelloader"><code><c- g>constructor</c-></code></a>();
+    // TBD
 };
 
 </pre>

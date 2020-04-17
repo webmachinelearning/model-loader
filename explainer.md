@@ -35,8 +35,8 @@ var options = {
   maxResults = 5
 };
 
-const mli = new MLInference();
-const model = await mli.load(modelUrl)
+const modelLoader = new ModelLoader();
+const model = await modelLoader.load(modelUrl)
 const compiledModel = await model.compile()
 compiledModel.predict(exampleList, options)
   .then(inferences => inferences.forEach(result => console.log(result)))
