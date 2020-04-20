@@ -35,7 +35,7 @@ var options = {
   maxResults = 5
 };
 
-const modelLoader = new ModelLoader();
+const modelLoader = navigator.ml.createModelLoader();
 const model = await modelLoader.load(modelUrl)
 const compiledModel = await model.compile()
 compiledModel.predict(exampleList, options)

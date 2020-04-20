@@ -9,6 +9,9 @@ URL: https://webmachinelearning.github.io/model-loader/
 Editor: Jonathan Bingham 114606, Google Inc. https://google.com
 Abstract: This document describes an API to load a custom pre-trained machine learning model.
 </pre>
+<pre class="anchors">
+urlPrefix: https://webmachinelearning.github.io/webnn/; url: dom-navigator-ml; type: interface; text: ML
+</pre>
 
 Introduction {#intro}
 =====================
@@ -19,9 +22,12 @@ API {#api}
 ==========
 
 <pre class="idl">
+partial interface ML {
+  ModelLoader createModelLoader();
+};
+
 interface ModelLoader {
-    constructor();
-    // TBD
+  //TBD
 };
 </pre>
 
@@ -39,7 +45,7 @@ var options = {
   maxResults = 5
 };
 
-const modelLoader = new ModelLoader();
+const modelLoader = navigator.ml.createModelLoader();
 const model = await modelLoader.load(modelUrl)
 const compiledModel = await model.compile()
 compiledModel.predict(exampleList, options)
