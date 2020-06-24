@@ -8,6 +8,7 @@ URL: https://webmachinelearning.github.io/model-loader/
 !Explainer: <a href="https://github.com/webmachinelearning/model-loader/blob/master/explainer.md">explainer.md</a>
 Editor: Jonathan Bingham 114606, Google Inc. https://google.com
 Abstract: This document describes an API to load a custom pre-trained machine learning model.
+Logo: https://webmachinelearning.github.io/webmachinelearning-logo.png
 </pre>
 <pre class="anchors">
 urlPrefix: https://webmachinelearning.github.io/webnn/; url: dom-navigator-ml; type: interface; text: ML
