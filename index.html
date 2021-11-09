@@ -12,7 +12,7 @@
  *   - .toc for the Table of Contents (<ol class="toc">)
  *     + <span class="secno"> for the section numbers
  *   - #toc for the Table of Contents (<nav id="toc">)
- *   - ul.index for Indices (<a href="#ref">term</a><span>, in §N.M</span>)
+ *   - ul.index for Indices (<a href="#ref">term</a><span>, in § N.M</span>)
  *   - table.index for Index Tables (e.g. for properties or elements)
  *
  * Structural Markup
@@ -598,7 +598,6 @@
 	a[href]:focus,
 	a[href]:hover {
 		text-decoration-thickness: 2px;
-		text-decoratin
 	}
 	a[href]:active {
 		color: #c00;
@@ -1488,9 +1487,9 @@ Possible extra rowspan handling
 		}
 	}
 </style>
-  <meta content="Bikeshed version 63985be8d, updated Thu Apr 22 17:16:48 2021 -0700" name="generator">
+  <meta content="Bikeshed version 761f52652, updated Tue Oct 5 16:07:23 2021 -0700" name="generator">
   <link href="https://webmachinelearning.github.io/model-loader/" rel="canonical">
-  <meta content="f8f8f5b7928875b8d1db64c4d240b8e13674843f" name="document-revision">
+  <meta content="c06b445aa3de97300e83603ac4a6613cebcaaaf1" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1731,6 +1730,16 @@ figcaption:not(.no-marker)::before {
 }
 
 .dfn-paneled { cursor: pointer; }
+</style>
+<style>/* style-issues */
+
+a[href].issue-return {
+    float: right;
+    float: inline-end;
+    color: var(--issueheading-text);
+    font-weight: bold;
+    text-decoration: none;
+}
 </style>
 <style>/* style-md-lists */
 
@@ -2045,7 +2054,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://webmachinelearning.github.io/"> <img alt="Logo" height="100" src="https://webmachinelearning.github.io/webmachinelearning-logo.png" width="100"> </a> </p>
    <h1 class="p-name no-ref" id="title">Model Loader API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-04-23">23 April 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-11-09">9 November 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2127,7 +2136,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
 <c- a>const</c-> modelLoader <c- o>=</c-> navigator<c- p>.</c->ml<c- p>.</c->createModelLoader<c- p>();</c->
 <c- a>const</c-> model <c- o>=</c-> <c- k>await</c-> modelLoader<c- p>.</c->load<c- p>(</c->modelUrl<c- p>)</c->
 <c- a>const</c-> compiledModel <c- o>=</c-> <c- k>await</c-> model<c- p>.</c->compile<c- p>()</c->
-compiledModel<c- p>.</c->predict<c- p>(</c->exampleList<c- p>,</c-> options<c- p>)</c->
+compiledModel<c- p>.</c->compute<c- p>(</c->exampleList<c- p>,</c-> options<c- p>)</c->
   <c- p>.</c->then<c- p>(</c->inferences <c- p>=></c-> inferences<c- p>.</c->forEach<c- p>(</c->result <c- p>=></c-> console<c- p>.</c->log<c- p>(</c->result<c- p>)))</c->
   <c- p>.</c-><c- k>catch</c-><c- p>(</c->e <c- p>=></c-> <c- p>{</c->
     console<c- p>.</c->error<c- p>(</c-><c- u>"Inference failed: "</c-> <c- o>+</c-> e<c- p>);</c->
@@ -2179,14 +2188,14 @@ compiledModel<c- p>.</c->predict<c- p>(</c->exampleList<c- p>,</c-> options<c- p
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-ml-createmodelloader">createModelLoader()</a><span>, in §2</span>
-   <li><a href="#modelloader">ModelLoader</a><span>, in §2</span>
+   <li><a href="#dom-ml-createmodelloader">createModelLoader()</a><span>, in § 2</span>
+   <li><a href="#modelloader">ModelLoader</a><span>, in § 2</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-rfc2119">[RFC2119]
-   <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+   <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://webmachinelearning.github.io/webnn/#dom-navigator-ml"><c- g>ML</c-></a> {
