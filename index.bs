@@ -27,6 +27,7 @@ partial interface ML {
   ModelLoader createModelLoader();
 };
 
+[SecureContext, Exposed=(Window, DedicatedWorker)]
 interface ModelLoader {
   //TBD
 };
