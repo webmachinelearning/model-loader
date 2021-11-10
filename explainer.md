@@ -25,24 +25,38 @@ detail.
 
 # Sample code
 
-```
-const modelUrl = 'url/to/ml/model';
-var exampleList = [{
-  'Feature1': value1,
-  'Feature2': value2
-}];
-var options = { 
-  maxResults = 5
-};
-
-const modelLoader = navigator.ml.createModelLoader();
-const model = await modelLoader.load(modelUrl)
-const compiledModel = await model.compile()
-compiledModel.compute(exampleList, options)
-  .then(inferences => inferences.forEach(result => console.log(result)))
-  .catch(e => {
-    console.error("Inference failed: " + e);
-  });
+```js
+// First, create an MLContext. This is consistent with WebNN API. And we will add a 
+// new field, "modelFormat". 
+const context = await navigator.ml.createContext(
+                                     { devicePreference: "gpu",
+                                       powerPreference: "low-power",
+                                       modelFormat: "tflite" });
+// Then create the model loader using the MLContext. Notice that, for TFLite 
+// models, users need to specify the indices of the input/output nodes. And the
+// users can optionally give the nodes names then the names can be used to denote 
+// the input/output nodes in the "compute" function.
+loader = new MLModelLoader(context, 
+                           { inputs:  {x: 1, y: 2},
+                             outputs: {z: 0 }));
+// In the first version, we only support loading models from ArrayBuffers. We 
+// believe this covers most of the usage cases. Web developers can download the 
+// model, e.g., by the fetch API. We can add new "load" functions in the future
+// if they are really needed.
+const modelUrl = 'https://path/to/model/file';
+const modelBuffer = await fetch(modelUrl)
+                            .then(response => response.blob())
+                            .then(blob => blob.arrayBuffer());
+model = await loader.load(modelBuffer);
+// Compute z = f(x,y) where the output buffer is pre-allocated. This is consistent 
+// with the WebNN API and will be good when, for example, the output buffer is a 
+// GPU buffer.
+z_buffer = new Float64Array(1);
+// The "model.compute" function is async and returns an empty promise.
+// Here we make the input/output format consistent with the WebNN API.
+await model.compute({ x: new Float64Array([10]),
+                      y: new Float64Array([20])},
+                    { z: z_buffer} );
 ```
 
 
