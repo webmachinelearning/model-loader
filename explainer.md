@@ -36,15 +36,14 @@ const context = await navigator.ml.createContext(
 // input/output nodes are named and can be referenced in the "compute" function.
 loader = new MLModelLoader(context, 
                            { inputs:  {x: 1, y: 2},
-                             outputs: {z: 0 }));
+                             outputs: {z: 0 } });
 // In the first version, we only support loading models from ArrayBuffers. We 
 // believe this covers most of the usage cases. Web developers can download the 
 // model, e.g., by the fetch API. We can add new "load" functions in the future
 // if they are really needed.
 const modelUrl = 'https://path/to/model/file';
 const modelBuffer = await fetch(modelUrl)
-                            .then(response => response.blob())
-                            .then(blob => blob.arrayBuffer());
+                            .then(response => response.arrayBuffer());
 model = await loader.load(modelBuffer);
 // Compute z = f(x,y) where the output buffer is pre-allocated. This is consistent 
 // with the WebNN API and will be good when, for example, the output buffer is a 
