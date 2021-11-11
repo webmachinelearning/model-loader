@@ -13,6 +13,18 @@ Logo: https://webmachinelearning.github.io/webmachinelearning-logo.png
 <pre class="anchors">
 urlPrefix: https://webmachinelearning.github.io/webnn/; url: dom-navigator-ml; type: interface; text: ML
 </pre>
+<pre class="anchors">
+urlPrefix: https://webmachinelearning.github.io/webnn/; spec: webnn
+    type: interface
+        text: ML; url: ml
+        text: MLContextOptions; url: dictdef-mlcontextoptions
+        text: MLContext; url: mlcontext
+        text: MLNamedInputs; url: typedefdef-mlnamedinputs
+        text: MLNamedOutputs; url: typedefdef-mlnamedoutputs
+</pre>
+<pre class="link-defaults">
+spec: webnn; type: interface; text: ML
+</pre>
 
 Introduction {#intro}
 =====================
@@ -23,13 +35,31 @@ API {#api}
 ==========
 
 <pre class="idl">
+enum MLModelFormat { "tflite" };
+
+dictionary MLModelLoaderContextOptions : MLContextOptions {
+  MLModelFormat modelFormat = "tflite";
+};
+
 partial interface ML {
-  ModelLoader createModelLoader();
+  MLContext createContext(optional MLModelLoaderContextOptions options = {});
+};
+
+dictionary LoadOptions {
+  // TBD InputNodes and OutputNodes
+  required InputNodes inputs;
+  required OutputNodes outputs;
 };
 
 [SecureContext, Exposed=(Window, DedicatedWorker)]
-interface ModelLoader {
-  //TBD
+interface MLModelLoader {
+  constructor(MLContext context);
+  Promise&lt;MLModel&gt; load(ArrayBufferView modelBuffer, LoadOptions options);
+};
+
+[SecureContext, Exposed=(Window, DedicatedWorker)]
+interface MLModel {
+  Promise&lt;undefined&gt; compute(MLNamedInputs inputs, MLNamedOutputs outputs);
 };
 </pre>
 
@@ -38,21 +68,33 @@ Examples {#examples}
 ==================
 
 <pre highlight="js">
-const modelUrl = 'url/to/ml/model';
-var exampleList = [{
-  'Feature1': value1,
-  'Feature2': value2
-}];
-var options = { 
-  maxResults = 5
-};
-
-const modelLoader = navigator.ml.createModelLoader();
-const model = await modelLoader.load(modelUrl)
-const compiledModel = await model.compile()
-compiledModel.compute(exampleList, options)
-  .then(inferences => inferences.forEach(result => console.log(result)))
-  .catch(e => {
-    console.error("Inference failed: " + e);
-  });
+// First, create an MLContext. This is consistent with WebNN API. And we will add a
+// new field, "modelFormat".
+const context = await navigator.ml.createContext(
+                                     { devicePreference: "gpu",
+                                       powerPreference: "low-power",
+                                       modelFormat: "tflite" });
+// Then create the model loader using the ML context.
+loader = new MLModelLoader(context);
+// In the first version, we only support loading models from ArrayBuffers. We
+// believe this covers most of the usage cases. Web developers can download the
+// model, e.g., by the fetch API. We can add new "load" functions in the future
+// if they are really needed.
+const modelUrl = 'https://path/to/model/file';
+const modelBuffer = await fetch(modelUrl)
+                            .then(response => response.arrayBuffer());
+// Load the model. Notice that the indices for the input/output nodes are named
+// and can be referenced in the "compute" function.
+model = await loader.load(modelBuffer,
+                            { inputs:  {x: 1, y: 2},
+                              outputs: {z: 0 } });
+// Compute z = f(x,y) where the output buffer is pre-allocated. This is consistent
+// with the WebNN API and will be good when, for example, the output buffer is a
+// GPU buffer.
+z_buffer = new Float64Array(1);
+// The "model.compute" function is async and returns an empty promise.
+// Here we make the input/output format consistent with the WebNN API.
+await model.compute({ x: new Float64Array([10]),
+                      y: new Float64Array([20])},
+                    { z: z_buffer} );
 </pre>
