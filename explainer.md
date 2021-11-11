@@ -32,11 +32,8 @@ const context = await navigator.ml.createContext(
                                      { devicePreference: "gpu",
                                        powerPreference: "low-power",
                                        modelFormat: "tflite" });
-// Then create the model loader using the ML context. Notice that the indices for the
-// input/output nodes are named and can be referenced in the "compute" function.
-loader = new MLModelLoader(context, 
-                           { inputs:  {x: 1, y: 2},
-                             outputs: {z: 0 } });
+// Then create the model loader using the ML context.
+loader = new MLModelLoader(context);
 // In the first version, we only support loading models from ArrayBuffers. We 
 // believe this covers most of the usage cases. Web developers can download the 
 // model, e.g., by the fetch API. We can add new "load" functions in the future
@@ -44,7 +41,11 @@ loader = new MLModelLoader(context,
 const modelUrl = 'https://path/to/model/file';
 const modelBuffer = await fetch(modelUrl)
                             .then(response => response.arrayBuffer());
-model = await loader.load(modelBuffer);
+// Load the model. Notice that the indices for the input/output nodes are named
+// and can be referenced in the "compute" function.
+model = await loader.load(modelBuffer, 
+                            { inputs:  {x: 1, y: 2},
+                              outputs: {z: 0 } });
 // Compute z = f(x,y) where the output buffer is pre-allocated. This is consistent 
 // with the WebNN API and will be good when, for example, the output buffer is a 
 // GPU buffer.
