@@ -32,10 +32,8 @@ const context = await navigator.ml.createContext(
                                      { devicePreference: "gpu",
                                        powerPreference: "low-power",
                                        modelFormat: "tflite" });
-// Then create the model loader using the MLContext. Notice that, for TFLite 
-// models, users need to specify the indices of the input/output nodes. And the
-// users can optionally give the nodes names then the names can be used to denote 
-// the input/output nodes in the "compute" function.
+// Then create the model loader using the ML context. Notice that the indices for the
+// input/output nodes are named and can be referenced in the "compute" function.
 loader = new MLModelLoader(context, 
                            { inputs:  {x: 1, y: 2},
                              outputs: {z: 0 }));
