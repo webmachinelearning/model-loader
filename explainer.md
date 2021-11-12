@@ -20,7 +20,7 @@ in web apps, across devices and browsers.
 
 ## Goals
 
-Like the related [Web NN](https://webmachinelearning.github.io/webnn) proposal, some of the main the goals are: 
+Like the related [Web Neural Network API](https://webmachinelearning.github.io/webnn) specification, some of the main the goals are: 
 
 *   Improve performance, by accessing specialized hardware on device and eliminating network latency
 *   Preserve privacy, by not shipping user data across the network
