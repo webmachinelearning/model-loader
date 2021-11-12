@@ -199,8 +199,8 @@ TFLite and ONNX can be unified, we opted to stay with a more general class.
 
 ## Stakeholder feedback / opposition
 
-The Model Loader API is currently included within the tentative scope of the
-[proposed charter]https://www.w3.org/2021/02/proposed-machine-learning-charter.html() for the Web ML Working Group.
+The Model Loader API is currently included as a Tentative Specification in the
+[Web Machine Learning Working Group Charter](https://www.w3.org/2021/04/web-machine-learning-charter.html).
 
 *   Apple: No public signals.  
 *   Google: Positive
