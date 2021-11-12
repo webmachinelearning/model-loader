@@ -15,7 +15,8 @@ in web apps, across devices and browsers.
 ## Participate
 
 *   [Issue tracker](https://github.com/webmachinelearning/model-loader/issues)
-*   [Web ML Working group](https://www.w3.org/groups/wg/webmachinelearning)
+*   [Web Machine Learning Community Group](https://www.w3.org/groups/cg/webmachinelearning)
+
 
 ## Goals
 
