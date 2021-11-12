@@ -180,7 +180,7 @@ to share common data structures and API surfaces for both types of API in order 
 Application-specific APIs like face detection and barcode detection are also a complementary approach. They have some
 limitations:
 
-Developers want to run custom models too. Application-specific APIs can cover the top use cases only, and with limited flexibility
+Developers want to run custom models too. Application-specific APIs can cover the top use cases only, and with limited flexibility.
 Organizations want to differentiate based on their data and their own trained models. They can’t with canned models.
 
 The APIs may give different results on different browsers, if the models themselves are provided with the browser and
