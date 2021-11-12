@@ -51,7 +51,8 @@ The API is modeled after existing ML model loading APIs like:
 *   [TensorRT Inference Server](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorrtserver)
 *   [MXNet Model Server](https://github.com/awslabs/multi-model-server)
 
-These and other  APIs are already widely used by many products and organizations for large volumes of requests.
+These and other APIs are already widely used by many products and organizations for large volumes of requests.
+
 Using an API that’s similar to a server-based API makes it easier to switch between server-based and local-based
 inference.
 
