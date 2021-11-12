@@ -207,7 +207,7 @@ The Model Loader API is currently included as a Tentative Specification in the
 *   Intel : Collaborating in Working Group
 *   Microsoft: Collaborating in Working Group
 *   Mozilla: No public signals
-*  Salesforce: Collaborating in Working Group
+*   Salesforce: Collaborating in Working Group
  
 ## References & acknowledgements
 
