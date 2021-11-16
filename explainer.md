@@ -1,27 +1,61 @@
 # Web ML Model Loader API Explainer
 
-**Model Loader** is a proposed web API to load a custom, pre-trained machine learning model in a standard format, compile
-it for the available hardware, and apply it to example data in JavaScript in order to perform inference, like classification, 
-regression, or ranking. The idea is to make it as easy as possible for web developers to use a custom, pre-built machine learning model in their web app, across devices and browsers. 
+## Introduction
 
-Performing inference locally can:
+The Machine Learning Model Loader API is a proposed web API to take a custom, pre-trained machine learning (ML) model 
+in a standard format, and apply it to example data in JavaScript in order to perform inference, like classification,
+regression, or ranking. The idea is to make it easy and performant to use a custom, pre-built machine learning model
+in web apps, across devices and browsers.
 
+## Authors
+
+*   Jonathan Bingham
+*   Honglin Yu
+
+## Participate
+
+*   [Issue tracker](https://github.com/webmachinelearning/model-loader/issues)
+*   [Web Machine Learning Community Group](https://www.w3.org/groups/cg/webmachinelearning)
+
+
+## Goals
+
+Like the related [Web Neural Network API](https://webmachinelearning.github.io/webnn) specification, some of the main the goals are: 
+
+*   Improve performance, by accessing specialized hardware on device and eliminating network latency
 *   Preserve privacy, by not shipping user data across the network
-*   Improve performance, by eliminating network latency
-*   Provide a fallback if network access is unavailable, possibly using a smaller and lower quality model
+*   Provide a fallback model if network access is unavailable, possibly using a smaller and lower quality model on-device
 
-The API is modeled after existing inference APIs like TensorFlow Serving, Clipper, TensorRT, and MXNet Model Server, which 
-are already widely used by many products and organizations for large volumes of requests. Using an API that’s similar to a 
-server-based API makes it easier to switch between server-based and local-based inference.
+The Model Loader API also has these additional goals:
 
-Unlike the Shape Detection API, the model loader APIs are generic. Application-specific libraries and APIs could be built on 
-top.
+*   Provide an API targeted at web developers, rather than ML framework authors. 
+*   Optimize model execution beyond what's possible if each operation needs to be expressed as a Javascript method call.
+*  Allow faster evolution by limiting the JavaScript API surface and relying on an external model format, rather than
+   relying on a set of builder methods in JavaScript.
 
-The API does not support training a model, modifying a model, federated learning, or other functionality. Maybe future 
-APIs could address those, if useful.
+## Non-Goals
 
-The underlying implementation can use any hardware acceleration available on the device, as an internal implementation 
-detail.
+*   Support training a model in the browser
+*   Modify a model at run time
+*   Enable federated learning
+*   Offer pre-trained models provided by the browser
+
+The non-goals can be addressed with client-side JavaScript libraries and published models, or future Web APIs. 
+
+## User research
+
+The API is modeled after existing ML model loading APIs like:
+
+*   [TensorFlow Serving](https://www.tensorflow.org/tfx/serving/serving_basic)
+*   [Clipper](https://github.com/ucbrise/clipper)
+*   [TensorRT Inference Server](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorrtserver)
+*   [MXNet Model Server](https://github.com/awslabs/multi-model-server)
+
+These and other APIs are already widely used by many products and organizations for large volumes of requests.
+
+Using an API that’s similar to a server-based API makes it easier to switch between server-based and local-based
+inference.
+
 
 # Sample code
 
@@ -57,81 +91,12 @@ await model.compute({ x: new Float64Array([10]),
                     { z: z_buffer} );
 ```
 
-
-# Frequently asked questions
-
-## How do we know this level of API will be useful?
-
-This API proposal is modeled after existing services like TensorFlow Serving, Clipper, TensorRT, and MXNet Model Server
-which provide an API at the same level of abstraction. These existing APIs are already used by thousands of organizations
-large and small, serving billions of inference requests per day. 
-
-## Why not just use a machine learning library like brain.js or tensorflow.js?
-
-You totally can. In fact, those libraries could function as a polyfill for browsers that don’t yet support a standard 
-model loader API.
-
-It’s possible that in the relatively near future, the operating system on every new phone, laptop, server, and other device 
-will ship with a built-in ML engine that takes advantage of the underlying hardware. That ML inference software 
-will have the support of the OS authors, will provide versioning, and will be heavily optimized. In that hypothetical future 
-world, it wouldn’t make much sense to ship a duplicate copy of the same functionality, likely in a worse-performing 
-implementation. 
-
-The benefits of a built-in model loader API are:
-
-*   Friendlier developer experience.
-*   Operating system-level code can implement the API in C++, and the web can provide an API to access it. By contrast, 
-    JavaScript is slower than native code. Realistically, WASM is probably the alternative.
-*   Full access to hardware acceleration is available without the developer doing extra work or relying on a library that’s 
-    limited to WASM, WebGPU, or WebGL.
-*   Fewer bytes to ship.
-*   A standardized ML model format. ML models become as easy to use as images or media files. 
+See also: [draft spec](https://webmachinelearning.github.io/model-loader/)
 
 
-## Why not just add more web standard APIs that are application-specific, like Shape Detection API?
+# Detailed design discussion
 
-Application-specific APIs like face detection and barcode detection have some issues:
-
-*   Developers want to run custom models too. Application-specific APIs can cover the top use cases only, and with limited 
-    flexibility 
-*   Organizations want to differentiate based on their data and their own trained models. They can’t with canned models.
-*   The APIs may give different results on different browsers, if the models themselves are provided with the browser and 
-    operating system.
-
-A generic inference API addresses these concerns. Something like the Shape Detection APIs could be built on top of the 
-Model Loader API, with the benefit that developers could swap in their own models, and use those same models across
-browsers and devices.
-
-
-## Why not use a graph API like the Neural Network API (NN API) on Android?
-
-The graph-based WebNN API and the Model Loader API are complementary approaches:
-
-*   The graph API targets JavaScript frameworks, like ONNX.js and TensorFlow.js. The Model Loader API targets web developers.
-    Most web developers just want to perform inference on a pre-trained model. They don’t need to construct a model in
-    JavaScript, so the web platform API surface doesn’t need to include all of those operations, and web developers wouldn’t 
-    use them directly.
-*   In the graph API, the operation definition is encoded in JavaScript and must be approved one by one. With a 
-    model loader API, the shape of the API is approved once, and then the file format can be updated by external maintainers.
-    The web standards process can approve updates to the spec for the format.
-
-We'll need to do some benchmarking to understand if there are performance differences, and get feedback from developers to
-see if it's valuable to offer both types of API.
-
-Note that the model loader API could be implemented on top of a graph API by parsing the model into the graph. We're working
-to share common data structures and API surfaces for both types of API in order to keep them in sync.
-
-
-## What kinds of machine learning could a model loader API support?
-
-The idea is to support any type, such as image classification, binary classification, logistic regression, sequence models, 
-or ranking.
-
-The API signature, inputs, and outputs would need to be carefully reviewed to make sure they work for all supported ML model 
-types.
-
-
-## What are the requirements for the model format(s)?
+## What ML model format(s) should be supported? 
 
 Any supported model format must be:
 
@@ -140,63 +105,125 @@ Any supported model format must be:
 *   Backwards compatible (or else translatable)
 *   Vendor neutral
 
-Chrome is proposing to prototype with a TF Lite flat buffer format, in order to gauge developer interest in the the API and
-get feedback on the API shape. The TF Lite flat buffer format does not currently meet the requirements for a web standard
-format. We expect the format to change. 
+Chrome is proposing to prototype with a TF Lite flat buffer format, in order to gauge developer interest in the
+API and get feedback on the API shape. The TF Lite flat buffer format does not currently meet the requirements
+for a web standard format. We expect the standard format of the eventual Model Loader API to be different. 
 
-For Web ML APIs to succeed, there will need to be converters from all major ML formats into the web standard representation.
+For the Model Loader API to succeed, there will need to be converters from all major ML formats into a web standard
+representation.
 
+## ML is evolving quickly. How will this stay up to date?
+
+It will require ongoing investment and updates for browsers to keep pace with advances in ML and hardware. Model
+formats evolve as well, and versioning will be required in order to ensure that new ML models are supported.
 
 ## How can web developers protect their proprietary ML models?
 
 Short answer: they can’t, under this initial proposal.
 
-But eventually this may need to be solved somehow. Data is often proprietary, and companies and organizations consider the ML 
-model to be IP. For server-based inference, the model never needs to leave the remote server, which provides at least
-some level of protection.
+But eventually this may need to be solved somehow. Data is often proprietary, and companies and organizations
+consider the ML model to be IP. For server-based inference, the model never needs to leave the remote server,
+which provides at least some level of protection.
 
-For OS vendors, there could be a way to specify local URLs that cannot be read from JavaScript. Eg, a URL scheme like ml://.
-There may well be other solutions. Creating a new URL scheme is not very appealing.
+For OS vendors, there could be a way to specify local URLs that cannot be read from JavaScript. Eg, a URL scheme
+like ml://. There may well be other solutions. Creating a new URL scheme is not very appealing.
 
-For web applications, maybe there’s a more DRM-like solution. Maybe the browser could have an encrypted model download space 
-that’s write-only, and it could fetch the remotely stored model over a secure connection. Once downloaded, the model could be 
-referenced, but no JavaScript library could read or access the contents. Only the internal implementation code could access 
-the model directly. 
+For web applications, maybe there’s a more DRM-like solution. Maybe the browser could have an encrypted model
+download space that’s write-only, and it could fetch the remotely stored model over a secure connection. Once
+downloaded, the model could be referenced, but no JavaScript library could read or access the contents. Only the
+internal implementation code could access the model directly.
 
 This requires further thought, by experts.
 
+# Security considerations
 
-## How will backwards compatibility be maintained?
+It will be a lot of work. The browser will need to parse and validate the model in depth and provide sandboxing and
+process isolation. Fuzz testing can help for operations. Each hardware driver will need to be secured. Security will
+be a major part of the effort to implement general-purpose ML on the Web.
 
-It's up to the model format to ensure backwards compatibility.
+# Privacy considerations
 
+This API potentially makes fingerprinting easier. Because the API will be available or not, or execute much faster
+or slower, depending on the device, operating system, and version, more information will be available for
+fingerprinting and tracking of users.
 
-## ML is evolving quickly. How will this stay up to date?
+Also, it might be useful for the API to expose some details about available hardware, because of the large impact on
+performance. The details could be used for fingerprinting.
 
-It will require ongoing investment and updates for browsers to keep pace with advances in ML and hardware.
+Eventually, over time, ML hardware will become more common, and the fingerprinting risk may diminish, so that perhaps
+it won’t be notably worse than for today’s GPUs and CPUs. In the meantime, it might be possible to bucket the API
+behavior into fewer categories, so there’s less information available for fingerprinting.
 
+# Alternatives considered
 
-## What about security?
+## Graph API
 
-It will be a lot of work. Each hardware driver will need to be secured. The browser will need to parse and validate the
-model in depth and provide sandboxing and process isolation. Fuzz testing can help for operations. Security will be a major
-part of the effort to implement general-purpose ML on the Web.
+The graph-based Web NN API and the Model Loader API are complementary approaches:
 
+The graph API targets JavaScript frameworks, like ONNX.js and TensorFlow.js. The Model Loader API targets web developers.
+Most web developers just want to perform inference on a pre-trained model. They don’t need to construct a model in
+JavaScript, so the web platform API surface doesn’t need to include all of those operations, and web developers wouldn’t
+use them directly.
 
-## What about fingerprinting? Doesn’t this make it easier?
+In the graph API, the operation definition is encoded in JavaScript and must be approved one by one. With a model loader
+API, the shape of the API is approved once, and then the file format can be updated by external maintainers. The web
+standards process can approve updates to the spec for the format.
 
-Yes, potentially. Because the API will be available or not, or execute much faster or slower, depending on the device, 
-operating system, and version, more information will be available for fingerprinting and tracking of users. 
+We'll need to do some benchmarking to understand if there are performance differences, and get feedback from developers to
+see if it's valuable to offer both types of API.
 
-Also, it might be valuable for the API to expose some details about available hardware, because of the large impact on
-performance. 
+Note that the model loader API could be implemented on top of a graph API by parsing the model into the graph. We're working
+to share common data structures and API surfaces for both types of API in order to keep them in sync.
 
-Eventually, over time, ML hardware will become more common, and  fingerprinting risk may diminish, so that perhaps it 
-won’t be notably worse than for today’s GPUs and CPUs. In the meantime, it might be possible to bucket the API behavior
-into fewer categories, so there’s less information available for fingerprinting. 
+## Application-specific APIs
 
+Application-specific APIs like face detection and barcode detection are also a complementary approach. They have some
+limitations:
 
-## Is it too high level to ever get agreement and ship?
+Developers want to run custom models too. Application-specific APIs can cover the top use cases only, and with limited flexibility.
+Organizations want to differentiate based on their data and their own trained models. They can’t with canned models.
 
-The existence of widely adopted model serving APIs like TensorFlow Serving suggests that an API at this level of abstraction 
-is broadly useful and can be standardized.
+The APIs may give different results on different browsers, if the models themselves are provided with the browser and
+operating system.
+
+A generic Model Loader API addresses these concerns. Something like the Shape Detection APIs could be built on top of the
+Model Loader API, with the benefit that developers could swap in their own models, and use those same models across browsers
+and devices.
+
+## Multiple model formats
+
+In order to potentially support multiple model formats, we considered creating a distinct MLModelLoader class for
+TFLiteModelLoader, to allow the method signature to support TF Lite specific attributes and be more friendly to IDEs.
+Given that our goal is to support a common web standard format, and the method signature for common model formats like
+TFLite and ONNX can be unified, we opted to stay with a more general class.
+
+## Stakeholder feedback / opposition
+
+The Model Loader API is currently included as a Tentative Specification in the
+[Web Machine Learning Working Group Charter](https://www.w3.org/2021/04/web-machine-learning-charter.html).
+
+*   Apple: No public signals.  
+*   Google: Positive
+*   Intel : Collaborating in Working Group
+*   Microsoft: Collaborating in Working Group
+*   Mozilla: No public signals
+*   Salesforce: Collaborating in Working Group
+ 
+## References & acknowledgements
+
+Many thanks for valuable feedback and advice from:
+
+*   Alex Russell
+*   Anssi Kostiainen
+*   Chai Chaoweeraprasit
+*   Daniel Smilkov
+*   Dominique Hazael-Massieux
+*   Ganesan Ramalingam
+*   Greg Whitworth
+*   James Darpinian
+*   Jeffrey Yaskin
+*   Jon Napper
+*   Kai Ninomiya
+*   Nikhil Thorat
+*   Ningxin Hu
+*   Rafael Cintron
