@@ -31,6 +31,8 @@ Introduction {#intro}
 
 For the introduction and use cases, please see the <a href="https://github.com/webmachinelearning/model-loader/blob/master/explainer.md">explainer.md</a>.
 
+For illustration purposes, the API and examples use the <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/schema/schema.fbs">TF Lite flatbuffer</a> format.
+
 API {#api}
 ==========
 
