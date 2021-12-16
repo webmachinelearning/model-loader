@@ -86,7 +86,8 @@ model = await loader.load(modelBuffer);
 // input tensor by name if they like).
 z = await model.compute({ data: new Float32Array([10]), 
                           dimensions: [1]) });
-// 2. When there are multiple input tensors, the user has to designate the name of the input tensors by their names.
+// 2. When there are multiple input tensors, the user has to designate the name 
+// of the input tensors by their names.
 z = await model.compute({ x: { data: new Float32Array([10]), 
                                dimensions: [1] },
                           y: { data: new Float32Array([20]), 
@@ -107,6 +108,11 @@ await model.compute({ data: new Float32Array([10]),
 // specify the name of the output tensor in case 3. But if there are multiple 
 // output tensors, the output in case 1 and 2 will be a map from tensor name to 
 // tensors, and in case 3, the output argument must be a map from tensor name to
+// tensors too.
+// For case 1 and 2, where the actual output data locate will depend on the 
+// context: if it is CPU context, the output tensor’s buffer will be RAM buffer(s)
+// and if the context is GPU context, the output tensor’s buffer will be GPU 
+// buffer(s).
 ```
 
 See also: [draft spec](https://webmachinelearning.github.io/model-loader/)
@@ -240,6 +246,7 @@ Many thanks for valuable feedback and advice from:
 *   Greg Whitworth
 *   James Darpinian
 *   Jeffrey Yaskin
+*   Jiewei Qian
 *   Jon Napper
 *   Kai Ninomiya
 *   Nikhil Thorat
