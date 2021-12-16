@@ -68,11 +68,11 @@ interface ML {
 };
 
 typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeInput;
-typedef (void or MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeOutput;
+typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeOutput;
 
 interface MLModelLoaded {
-  Promise&lt;MLModelLoadedComputeOutput&gt; compute(MLModelLoaderComputeInput inputs, 
-                                                    optional MLModelLoaderComputeInput outputs);
+  Promise&lt;MLModelLoadedComputeOutput?&gt; compute(MLModelLoaderComputeInput inputs, 
+                                                     optional MLModelLoaderComputeInput outputs);
 };
 
 [SecureContext, Exposed=(Window, DedicatedWorker)]
