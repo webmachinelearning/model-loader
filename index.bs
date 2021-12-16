@@ -63,6 +63,7 @@ dictionary MLContextOptions {
   MLModelFormat modelFormat = "tflite";
 };
 
+[Exposed=(Window, DedicatedWorker)]
 interface ML {
   Promise&lt;MLContext&gt; createContext(optional MLContextOptions options = {});
 };
@@ -70,6 +71,7 @@ interface ML {
 typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeInput;
 typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeOutput;
 
+[Exposed=(Window, DedicatedWorker)]
 interface MLModelLoaded {
   Promise&lt;MLModelLoadedComputeOutput?&gt; compute(MLModelLoaderComputeInput inputs, 
                                                      optional MLModelLoaderComputeInput outputs);
