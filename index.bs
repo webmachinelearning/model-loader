@@ -39,30 +39,47 @@ API {#api}
 <pre class="idl">
 enum MLModelFormat { "tflite" };
 
-dictionary MLModelLoaderContextOptions : MLContextOptions {
+enum MLDevicePreference {
+  "gpu",
+  "cpu"
+};
+
+enum MLPowerPreference {
+  // Prioritizes execution speed over power consumption.
+  "high-performance",
+  // Prioritizes power consumption over other considerations such as execution
+  // speed.
+  "low-power",
+};
+
+dictionary MLContextOptions {
+  // Preferred kind of device to use.
+  MLDevicePreference devicePreference = "cpu";
+
+  // Preference as related to power consumption.
+  MLPowerPreference powerPreference = "low-power";
+
+  // Model format for the model loader API.
   MLModelFormat modelFormat = "tflite";
 };
 
-partial interface ML {
-  MLContext createContext(optional MLModelLoaderContextOptions options = {});
+interface ML {
+  Promise&lt;MLContext&gt; createContext(optional MLContextOptions options = {});
 };
 
-dictionary LoadOptions {
-  // TBD InputNodes and OutputNodes
-  required InputNodes inputs;
-  required OutputNodes outputs;
+typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeInput;
+typedef (void or MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeOutput;
+
+interface MLModelLoaded {
+  Promise&lt;MLModelLoadedComputeOutput&gt; compute(MLModelLoaderComputeInput inputs);
 };
 
 [SecureContext, Exposed=(Window, DedicatedWorker)]
 interface MLModelLoader {
   constructor(MLContext context);
-  Promise&lt;MLModel&gt; load(ArrayBufferView modelBuffer, LoadOptions options);
+  Promise&lt;MLModelLoaded&gt; load(ArrayBufferView modelBuffer);
 };
 
-[SecureContext, Exposed=(Window, DedicatedWorker)]
-interface MLModel {
-  Promise&lt;undefined&gt; compute(MLNamedInputs inputs, MLNamedOutputs outputs);
-};
 </pre>
 
 
@@ -70,33 +87,57 @@ Examples {#examples}
 ==================
 
 <pre highlight="js">
-// First, create an MLContext. This is consistent with WebNN API. And we will add a
-// new field, "modelFormat".
+// First, create an MLContext. This is consistent with the WebNN API. And we will 
+// add two new fields, “numThread” and "modelFormat". 
 const context = await navigator.ml.createContext(
-                                     { devicePreference: "gpu",
+                                     { devicePreference: "cpu",
                                        powerPreference: "low-power",
+                                       numThread: 0,   // the default 0 means 
+                                                       // "decide automatically". 
                                        modelFormat: "tflite" });
 // Then create the model loader using the ML context.
 loader = new MLModelLoader(context);
-// In the first version, we only support loading models from ArrayBuffers. We
-// believe this covers most of the usage cases. Web developers can download the
+// In the first version, we only support loading models from ArrayBuffers. We 
+// believe this covers most of the usage cases. Web developers can download the 
 // model, e.g., by the fetch API. We can add new "load" functions in the future
 // if they are really needed.
 const modelUrl = 'https://path/to/model/file';
 const modelBuffer = await fetch(modelUrl)
                             .then(response => response.arrayBuffer());
-// Load the model. Notice that the indices for the input/output nodes are named
-// and can be referenced in the "compute" function.
-model = await loader.load(modelBuffer,
-                            { inputs:  {x: 1, y: 2},
-                              outputs: {z: 0 } });
-// Compute z = f(x,y) where the output buffer is pre-allocated. This is consistent
-// with the WebNN API and will be good when, for example, the output buffer is a
-// GPU buffer.
-z_buffer = new Float64Array(1);
-// The "model.compute" function is async and returns an empty promise.
-// Here we make the input/output format consistent with the WebNN API.
-await model.compute({ x: new Float64Array([10]),
-                      y: new Float64Array([20])},
-                    { z: z_buffer} );
+// Load the model.
+model = await loader.load(modelBuffer);
+// Use the `model.compute` function to get the output of the model from some 
+// inputs.  Example ways of using this function includes, 
+// 1. When there is only one input tensor of the model, one can simply input the 
+// tensor, without specifying the name of it (the user can still designate this 
+// input tensor by name if they like).
+z = await model.compute({ data: new Float32Array([10]), 
+                          dimensions: [1]) });
+// 2. When there are multiple input tensors, the user has to designate the name 
+// of the input tensors by their names.
+z = await model.compute({ x: { data: new Float32Array([10]), 
+                               dimensions: [1] },
+                          y: { data: new Float32Array([20]), 
+                               dimensions: [1] } });
+// 3. The client can also specify the output tensor. This is consistent with the 
+// WebNN API and can be useful, e.g., when the output tensor is a GPU buffer. At 
+// this time, the function will return an empty promise. The dimension of the 
+// output tensor specified must match the dimensions of the output tensor of the 
+// model. 
+z_buffer = ml.tensor({data: new Float64Array(1), 
+                      dimensions: [1] });
+await model.compute({ data: new Float32Array([10]), 
+                      dimensions: [1] },
+                    z_buffer);
+// For the output tensor(s),
+// Similar to the input arguments, if there is only one output tensor, the 
+// `compute` function returns a tensor in case 1 and 2, and there is no need to 
+// specify the name of the output tensor in case 3. But if there are multiple 
+// output tensors, the output in case 1 and 2 will be a map from tensor name to 
+// tensors, and in case 3, the output argument must be a map from tensor name to
+// tensors too.
+// For case 1 and 2, where the actual output data locate will depend on the 
+// context: if it is CPU context, the output tensor’s buffer will be RAM buffer(s)
+// and if the context is GPU context, the output tensor’s buffer will be GPU 
+// buffer(s).
 </pre>
