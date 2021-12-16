@@ -71,7 +71,8 @@ typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeInpu
 typedef (void or MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeOutput;
 
 interface MLModelLoaded {
-  Promise&lt;MLModelLoadedComputeOutput&gt; compute(MLModelLoaderComputeInput inputs);
+  Promise&lt;MLModelLoadedComputeOutput&gt; compute(MLModelLoaderComputeInput inputs, 
+                                                    optional MLModelLoaderComputeInput outputs);
 };
 
 [SecureContext, Exposed=(Window, DedicatedWorker)]
