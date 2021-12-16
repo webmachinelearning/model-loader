@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://webmachinelearning.github.io/model-loader/" rel="canonical">
-  <meta content="c7dc893785de1cd0cd12007e69d5903496a15b23" name="document-revision">
+  <meta content="283b28fb0382db08104208991a931e10481017e8" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -579,7 +579,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://webmachinelearning.github.io/"> <img alt="Logo" height="100" src="https://webmachinelearning.github.io/webmachinelearning-logo.png" width="100"> </a> </p>
    <h1 class="p-name no-ref" id="title">Model Loader API</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2021-12-08">8 December 2021</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2021-12-16">16 December 2021</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -648,61 +648,105 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <h2 class="heading settled" data-level="2" id="api"><span class="secno">2. </span><span class="content">API</span><a class="self-link" href="#api"></a></h2>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-mlmodelformat"><code><c- g>MLModelFormat</c-></code></dfn> { <dfn class="idl-code" data-dfn-for="MLModelFormat" data-dfn-type="enum-value" data-export id="dom-mlmodelformat-tflite"><code><c- s>"tflite"</c-></code><a class="self-link" href="#dom-mlmodelformat-tflite"></a></dfn> };
 
-<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mlmodelloadercontextoptions"><code><c- g>MLModelLoaderContextOptions</c-></code></dfn> : <a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#dictdef-mlcontextoptions" id="ref-for-dictdef-mlcontextoptions"><c- n>MLContextOptions</c-></a> {
-  <a data-link-type="idl-name" href="#enumdef-mlmodelformat" id="ref-for-enumdef-mlmodelformat"><c- n>MLModelFormat</c-></a> <dfn class="idl-code" data-default="&quot;tflite&quot;" data-dfn-for="MLModelLoaderContextOptions" data-dfn-type="dict-member" data-export data-type="MLModelFormat " id="dom-mlmodelloadercontextoptions-modelformat"><code><c- g>modelFormat</c-></code><a class="self-link" href="#dom-mlmodelloadercontextoptions-modelformat"></a></dfn> = "tflite";
+<c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-mldevicepreference"><code><c- g>MLDevicePreference</c-></code></dfn> {
+  <dfn class="idl-code" data-dfn-for="MLDevicePreference" data-dfn-type="enum-value" data-export id="dom-mldevicepreference-gpu"><code><c- s>"gpu"</c-></code><a class="self-link" href="#dom-mldevicepreference-gpu"></a></dfn>,
+  <dfn class="idl-code" data-dfn-for="MLDevicePreference" data-dfn-type="enum-value" data-export id="dom-mldevicepreference-cpu"><code><c- s>"cpu"</c-></code><a class="self-link" href="#dom-mldevicepreference-cpu"></a></dfn>
 };
 
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://webmachinelearning.github.io/webnn/#ml" id="ref-for-ml"><c- g>ML</c-></a> {
-  <a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#mlcontext" id="ref-for-mlcontext"><c- n>MLContext</c-></a> <dfn class="idl-code" data-dfn-for="ML" data-dfn-type="method" data-export data-lt="createContext(options)|createContext()" id="dom-ml-createcontext"><code><c- g>createContext</c-></code><a class="self-link" href="#dom-ml-createcontext"></a></dfn>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-mlmodelloadercontextoptions" id="ref-for-dictdef-mlmodelloadercontextoptions"><c- n>MLModelLoaderContextOptions</c-></a> <dfn class="idl-code" data-dfn-for="ML/createContext(options), ML/createContext()" data-dfn-type="argument" data-export id="dom-ml-createcontext-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-ml-createcontext-options-options"></a></dfn> = {});
+<c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-mlpowerpreference"><code><c- g>MLPowerPreference</c-></code></dfn> {
+  // Prioritizes execution speed over power consumption.
+  <dfn class="idl-code" data-dfn-for="MLPowerPreference" data-dfn-type="enum-value" data-export id="dom-mlpowerpreference-high-performance"><code><c- s>"high-performance"</c-></code><a class="self-link" href="#dom-mlpowerpreference-high-performance"></a></dfn>,
+  // Prioritizes power consumption over other considerations such as execution
+  // speed.
+  <dfn class="idl-code" data-dfn-for="MLPowerPreference" data-dfn-type="enum-value" data-export id="dom-mlpowerpreference-low-power"><code><c- s>"low-power"</c-></code><a class="self-link" href="#dom-mlpowerpreference-low-power"></a></dfn>,
 };
 
-<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-loadoptions"><code><c- g>LoadOptions</c-></code></dfn> {
-  // TBD InputNodes and OutputNodes
-  <c- b>required</c-> <a data-link-type="idl-name"><c- n>InputNodes</c-></a> <dfn class="idl-code" data-dfn-for="LoadOptions" data-dfn-type="dict-member" data-export data-type="InputNodes " id="dom-loadoptions-inputs"><code><c- g>inputs</c-></code><a class="self-link" href="#dom-loadoptions-inputs"></a></dfn>;
-  <c- b>required</c-> <a data-link-type="idl-name"><c- n>OutputNodes</c-></a> <dfn class="idl-code" data-dfn-for="LoadOptions" data-dfn-type="dict-member" data-export data-type="OutputNodes " id="dom-loadoptions-outputs"><code><c- g>outputs</c-></code><a class="self-link" href="#dom-loadoptions-outputs"></a></dfn>;
+<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mlcontextoptions"><code><c- g>MLContextOptions</c-></code></dfn> {
+  // Preferred kind of device to use.
+  <a data-link-type="idl-name" href="#enumdef-mldevicepreference" id="ref-for-enumdef-mldevicepreference"><c- n>MLDevicePreference</c-></a> <dfn class="idl-code" data-default="&quot;cpu&quot;" data-dfn-for="MLContextOptions" data-dfn-type="dict-member" data-export data-type="MLDevicePreference " id="dom-mlcontextoptions-devicepreference"><code><c- g>devicePreference</c-></code><a class="self-link" href="#dom-mlcontextoptions-devicepreference"></a></dfn> = "cpu";
+
+  // Preference as related to power consumption.
+  <a data-link-type="idl-name" href="#enumdef-mlpowerpreference" id="ref-for-enumdef-mlpowerpreference"><c- n>MLPowerPreference</c-></a> <dfn class="idl-code" data-default="&quot;low-power&quot;" data-dfn-for="MLContextOptions" data-dfn-type="dict-member" data-export data-type="MLPowerPreference " id="dom-mlcontextoptions-powerpreference"><code><c- g>powerPreference</c-></code><a class="self-link" href="#dom-mlcontextoptions-powerpreference"></a></dfn> = "low-power";
+
+  // Model format for the model loader API.
+  <a data-link-type="idl-name" href="#enumdef-mlmodelformat" id="ref-for-enumdef-mlmodelformat"><c- n>MLModelFormat</c-></a> <dfn class="idl-code" data-default="&quot;tflite&quot;" data-dfn-for="MLContextOptions" data-dfn-type="dict-member" data-export data-type="MLModelFormat " id="dom-mlcontextoptions-modelformat"><code><c- g>modelFormat</c-></code><a class="self-link" href="#dom-mlcontextoptions-modelformat"></a></dfn> = "tflite";
 };
 
-[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
+<c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="ml"><code><c- g>ML</c-></code><a class="self-link" href="#ml"></a></dfn> {
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#mlcontext" id="ref-for-mlcontext"><c- n>MLContext</c-></a>> <dfn class="idl-code" data-dfn-for="ML" data-dfn-type="method" data-export data-lt="createContext(options)|createContext()" id="dom-ml-createcontext"><code><c- g>createContext</c-></code><a class="self-link" href="#dom-ml-createcontext"></a></dfn>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-mlcontextoptions" id="ref-for-dictdef-mlcontextoptions"><c- n>MLContextOptions</c-></a> <dfn class="idl-code" data-dfn-for="ML/createContext(options), ML/createContext()" data-dfn-type="argument" data-export id="dom-ml-createcontext-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-ml-createcontext-options-options"></a></dfn> = {});
+};
+
+<c- b>typedef</c-> (<a data-link-type="idl-name"><c- n>MLTensor</c-></a> <c- b>or</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-record" id="ref-for-idl-record"><c- b>record</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a>, <a data-link-type="idl-name"><c- n>MLTensor</c-></a>>) <dfn class="idl-code" data-dfn-type="typedef" data-export id="typedefdef-mlmodelloadedcomputeinput"><code><c- g>MLModelLoadedComputeInput</c-></code><a class="self-link" href="#typedefdef-mlmodelloadedcomputeinput"></a></dfn>;
+<c- b>typedef</c-> (<a data-link-type="idl-name"><c- n>MLTensor</c-></a> <c- b>or</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-record" id="ref-for-idl-record①"><c- b>record</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a>, <a data-link-type="idl-name"><c- n>MLTensor</c-></a>>) <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-mlmodelloadedcomputeoutput"><code><c- g>MLModelLoadedComputeOutput</c-></code></dfn>;
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
+<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="mlmodelloaded"><code><c- g>MLModelLoaded</c-></code></dfn> {
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise①"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#typedefdef-mlmodelloadedcomputeoutput" id="ref-for-typedefdef-mlmodelloadedcomputeoutput"><c- n>MLModelLoadedComputeOutput</c-></a>?> <dfn class="idl-code" data-dfn-for="MLModelLoaded" data-dfn-type="method" data-export data-lt="compute(inputs, outputs)|compute(inputs)" id="dom-mlmodelloaded-compute"><code><c- g>compute</c-></code><a class="self-link" href="#dom-mlmodelloaded-compute"></a></dfn>(<a data-link-type="idl-name"><c- n>MLModelLoaderComputeInput</c-></a> <dfn class="idl-code" data-dfn-for="MLModelLoaded/compute(inputs, outputs), MLModelLoaded/compute(inputs)" data-dfn-type="argument" data-export id="dom-mlmodelloaded-compute-inputs-outputs-inputs"><code><c- g>inputs</c-></code><a class="self-link" href="#dom-mlmodelloaded-compute-inputs-outputs-inputs"></a></dfn>, 
+                                                     <c- b>optional</c-> <a data-link-type="idl-name"><c- n>MLModelLoaderComputeInput</c-></a> <dfn class="idl-code" data-dfn-for="MLModelLoaded/compute(inputs, outputs), MLModelLoaded/compute(inputs)" data-dfn-type="argument" data-export id="dom-mlmodelloaded-compute-inputs-outputs-outputs"><code><c- g>outputs</c-></code><a class="self-link" href="#dom-mlmodelloaded-compute-inputs-outputs-outputs"></a></dfn>);
+};
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed②"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
 <c- b>interface</c-> <dfn class="idl-code" data-dfn-type="interface" data-export id="mlmodelloader"><code><c- g>MLModelLoader</c-></code><a class="self-link" href="#mlmodelloader"></a></dfn> {
   <dfn class="idl-code" data-dfn-for="MLModelLoader" data-dfn-type="constructor" data-export data-lt="MLModelLoader(context)|constructor(context)" id="dom-mlmodelloader-mlmodelloader"><code><c- g>constructor</c-></code><a class="self-link" href="#dom-mlmodelloader-mlmodelloader"></a></dfn>(<a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#mlcontext" id="ref-for-mlcontext①"><c- n>MLContext</c-></a> <dfn class="idl-code" data-dfn-for="MLModelLoader/MLModelLoader(context), MLModelLoader/constructor(context)" data-dfn-type="argument" data-export id="dom-mlmodelloader-mlmodelloader-context-context"><code><c- g>context</c-></code><a class="self-link" href="#dom-mlmodelloader-mlmodelloader-context-context"></a></dfn>);
-  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#mlmodel" id="ref-for-mlmodel"><c- n>MLModel</c-></a>> <dfn class="idl-code" data-dfn-for="MLModelLoader" data-dfn-type="method" data-export data-lt="load(modelBuffer, options)" id="dom-mlmodelloader-load"><code><c- g>load</c-></code><a class="self-link" href="#dom-mlmodelloader-load"></a></dfn>(<a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView" id="ref-for-ArrayBufferView"><c- n>ArrayBufferView</c-></a> <dfn class="idl-code" data-dfn-for="MLModelLoader/load(modelBuffer, options)" data-dfn-type="argument" data-export id="dom-mlmodelloader-load-modelbuffer-options-modelbuffer"><code><c- g>modelBuffer</c-></code><a class="self-link" href="#dom-mlmodelloader-load-modelbuffer-options-modelbuffer"></a></dfn>, <a data-link-type="idl-name" href="#dictdef-loadoptions" id="ref-for-dictdef-loadoptions"><c- n>LoadOptions</c-></a> <dfn class="idl-code" data-dfn-for="MLModelLoader/load(modelBuffer, options)" data-dfn-type="argument" data-export id="dom-mlmodelloader-load-modelbuffer-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-mlmodelloader-load-modelbuffer-options-options"></a></dfn>);
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise②"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#mlmodelloaded" id="ref-for-mlmodelloaded"><c- n>MLModelLoaded</c-></a>> <dfn class="idl-code" data-dfn-for="MLModelLoader" data-dfn-type="method" data-export data-lt="load(modelBuffer)" id="dom-mlmodelloader-load"><code><c- g>load</c-></code><a class="self-link" href="#dom-mlmodelloader-load"></a></dfn>(<a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView" id="ref-for-ArrayBufferView"><c- n>ArrayBufferView</c-></a> <dfn class="idl-code" data-dfn-for="MLModelLoader/load(modelBuffer)" data-dfn-type="argument" data-export id="dom-mlmodelloader-load-modelbuffer-modelbuffer"><code><c- g>modelBuffer</c-></code><a class="self-link" href="#dom-mlmodelloader-load-modelbuffer-modelbuffer"></a></dfn>);
 };
 
-[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
-<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="mlmodel"><code><c- g>MLModel</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise①"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined" id="ref-for-idl-undefined"><c- b>undefined</c-></a>> <dfn class="idl-code" data-dfn-for="MLModel" data-dfn-type="method" data-export data-lt="compute(inputs, outputs)" id="dom-mlmodel-compute"><code><c- g>compute</c-></code><a class="self-link" href="#dom-mlmodel-compute"></a></dfn>(<a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedinputs" id="ref-for-typedefdef-mlnamedinputs"><c- n>MLNamedInputs</c-></a> <dfn class="idl-code" data-dfn-for="MLModel/compute(inputs, outputs)" data-dfn-type="argument" data-export id="dom-mlmodel-compute-inputs-outputs-inputs"><code><c- g>inputs</c-></code><a class="self-link" href="#dom-mlmodel-compute-inputs-outputs-inputs"></a></dfn>, <a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedoutputs" id="ref-for-typedefdef-mlnamedoutputs"><c- n>MLNamedOutputs</c-></a> <dfn class="idl-code" data-dfn-for="MLModel/compute(inputs, outputs)" data-dfn-type="argument" data-export id="dom-mlmodel-compute-inputs-outputs-outputs"><code><c- g>outputs</c-></code><a class="self-link" href="#dom-mlmodel-compute-inputs-outputs-outputs"></a></dfn>);
-};
 </pre>
    <h2 class="heading settled" data-level="3" id="examples"><span class="secno">3. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
-<pre class="highlight"><c- c1>// First, create an MLContext. This is consistent with WebNN API. And we will add a</c->
-<c- c1>// new field, "modelFormat".</c->
+<pre class="highlight"><c- c1>// First, create an MLContext. This is consistent with the WebNN API. And we will </c->
+<c- c1>// add two new fields, “numThread” and "modelFormat". </c->
 <c- a>const</c-> context <c- o>=</c-> <c- k>await</c-> navigator<c- p>.</c->ml<c- p>.</c->createContext<c- p>(</c->
-                                     <c- p>{</c-> devicePreference<c- o>:</c-> <c- u>"gpu"</c-><c- p>,</c->
+                                     <c- p>{</c-> devicePreference<c- o>:</c-> <c- u>"cpu"</c-><c- p>,</c->
                                        powerPreference<c- o>:</c-> <c- u>"low-power"</c-><c- p>,</c->
+                                       numThread<c- o>:</c-> <c- mf>0</c-><c- p>,</c->   <c- c1>// the default 0 means </c->
+                                                       <c- c1>// "decide automatically". </c->
                                        modelFormat<c- o>:</c-> <c- u>"tflite"</c-> <c- p>});</c->
 <c- c1>// Then create the model loader using the ML context.</c->
 loader <c- o>=</c-> <c- k>new</c-> MLModelLoader<c- p>(</c->context<c- p>);</c->
-<c- c1>// In the first version, we only support loading models from ArrayBuffers. We</c->
-<c- c1>// believe this covers most of the usage cases. Web developers can download the</c->
+<c- c1>// In the first version, we only support loading models from ArrayBuffers. We </c->
+<c- c1>// believe this covers most of the usage cases. Web developers can download the </c->
 <c- c1>// model, e.g., by the fetch API. We can add new "load" functions in the future</c->
 <c- c1>// if they are really needed.</c->
 <c- a>const</c-> modelUrl <c- o>=</c-> <c- t>'https://path/to/model/file'</c-><c- p>;</c->
 <c- a>const</c-> modelBuffer <c- o>=</c-> <c- k>await</c-> fetch<c- p>(</c->modelUrl<c- p>)</c->
                             <c- p>.</c->then<c- p>(</c->response <c- p>=></c-> response<c- p>.</c->arrayBuffer<c- p>());</c->
-<c- c1>// Load the model. Notice that the indices for the input/output nodes are named</c->
-<c- c1>// and can be referenced in the "compute" function.</c->
-model <c- o>=</c-> <c- k>await</c-> loader<c- p>.</c->load<c- p>(</c->modelBuffer<c- p>,</c->
-                            <c- p>{</c-> inputs<c- o>:</c->  <c- p>{</c->x<c- o>:</c-> <c- mf>1</c-><c- p>,</c-> y<c- o>:</c-> <c- mf>2</c-><c- p>},</c->
-                              outputs<c- o>:</c-> <c- p>{</c->z<c- o>:</c-> <c- mf>0</c-> <c- p>}</c-> <c- p>});</c->
-<c- c1>// Compute z = f(x,y) where the output buffer is pre-allocated. This is consistent</c->
-<c- c1>// with the WebNN API and will be good when, for example, the output buffer is a</c->
-<c- c1>// GPU buffer.</c->
-z_buffer <c- o>=</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>);</c->
-<c- c1>// The "model.compute" function is async and returns an empty promise.</c->
-<c- c1>// Here we make the input/output format consistent with the WebNN API.</c->
-<c- k>await</c-> model<c- p>.</c->compute<c- p>({</c-> x<c- o>:</c-> <c- k>new</c-> Float64Array<c- p>([</c-><c- mf>10</c-><c- p>]),</c->
-                      y<c- o>:</c-> <c- k>new</c-> Float64Array<c- p>([</c-><c- mf>20</c-><c- p>])},</c->
-                    <c- p>{</c-> z<c- o>:</c-> z_buffer<c- p>}</c-> <c- p>);</c->
+<c- c1>// Load the model.</c->
+model <c- o>=</c-> <c- k>await</c-> loader<c- p>.</c->load<c- p>(</c->modelBuffer<c- p>);</c->
+<c- c1>// Use the `model.compute` function to get the output of the model from some </c->
+<c- c1>// inputs.  Example ways of using this function includes, </c->
+<c- c1>// 1. When there is only one input tensor of the model, one can simply input the </c->
+<c- c1>// tensor, without specifying the name of it (the user can still designate this </c->
+<c- c1>// input tensor by name if they like).</c->
+z <c- o>=</c-> <c- k>await</c-> model<c- p>.</c->compute<c- p>({</c-> data<c- o>:</c-> <c- k>new</c-> Float32Array<c- p>([</c-><c- mf>10</c-><c- p>]),</c-> 
+                          dimensions<c- o>:</c-> <c- p>[</c-><c- mf>1</c-><c- p>])</c-> <c- p>});</c->
+<c- c1>// 2. When there are multiple input tensors, the user has to designate the name </c->
+<c- c1>// of the input tensors by their names.</c->
+z <c- o>=</c-> <c- k>await</c-> model<c- p>.</c->compute<c- p>({</c-> x<c- o>:</c-> <c- p>{</c-> data<c- o>:</c-> <c- k>new</c-> Float32Array<c- p>([</c-><c- mf>10</c-><c- p>]),</c-> 
+                               dimensions<c- o>:</c-> <c- p>[</c-><c- mf>1</c-><c- p>]</c-> <c- p>},</c->
+                          y<c- o>:</c-> <c- p>{</c-> data<c- o>:</c-> <c- k>new</c-> Float32Array<c- p>([</c-><c- mf>20</c-><c- p>]),</c-> 
+                               dimensions<c- o>:</c-> <c- p>[</c-><c- mf>1</c-><c- p>]</c-> <c- p>}</c-> <c- p>});</c->
+<c- c1>// 3. The client can also specify the output tensor. This is consistent with the </c->
+<c- c1>// WebNN API and can be useful, e.g., when the output tensor is a GPU buffer. At </c->
+<c- c1>// this time, the function will return an empty promise. The dimension of the </c->
+<c- c1>// output tensor specified must match the dimensions of the output tensor of the </c->
+<c- c1>// model. </c->
+z_buffer <c- o>=</c-> ml<c- p>.</c->tensor<c- p>({</c->data<c- o>:</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>),</c-> 
+                      dimensions<c- o>:</c-> <c- p>[</c-><c- mf>1</c-><c- p>]</c-> <c- p>});</c->
+<c- k>await</c-> model<c- p>.</c->compute<c- p>({</c-> data<c- o>:</c-> <c- k>new</c-> Float32Array<c- p>([</c-><c- mf>10</c-><c- p>]),</c-> 
+                      dimensions<c- o>:</c-> <c- p>[</c-><c- mf>1</c-><c- p>]</c-> <c- p>},</c->
+                    z_buffer<c- p>);</c->
+<c- c1>// For the output tensor(s),</c->
+<c- c1>// Similar to the input arguments, if there is only one output tensor, the </c->
+<c- c1>// `compute` function returns a tensor in case 1 and 2, and there is no need to </c->
+<c- c1>// specify the name of the output tensor in case 3. But if there are multiple </c->
+<c- c1>// output tensors, the output in case 1 and 2 will be a map from tensor name to </c->
+<c- c1>// tensors, and in case 3, the output argument must be a map from tensor name to</c->
+<c- c1>// tensors too.</c->
+<c- c1>// For case 1 and 2, where the actual output data locate will depend on the </c->
+<c- c1>// context: if it is CPU context, the output tensor’s buffer will be RAM buffer(s)</c->
+<c- c1>// and if the context is GPU context, the output tensor’s buffer will be GPU </c->
+<c- c1>// buffer(s).</c->
 </pre>
   </main>
   <div data-fill-with="conformance">
@@ -750,20 +794,29 @@ z_buffer <c- o>=</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-mlmodel-compute">compute(inputs, outputs)</a><span>, in § 2</span>
+   <li><a href="#dom-mlmodelloaded-compute">compute(inputs)</a><span>, in § 2</span>
+   <li><a href="#dom-mlmodelloaded-compute">compute(inputs, outputs)</a><span>, in § 2</span>
    <li><a href="#dom-mlmodelloader-mlmodelloader">constructor(context)</a><span>, in § 2</span>
+   <li><a href="#dom-mldevicepreference-cpu">"cpu"</a><span>, in § 2</span>
    <li><a href="#dom-ml-createcontext">createContext()</a><span>, in § 2</span>
    <li><a href="#dom-ml-createcontext">createContext(options)</a><span>, in § 2</span>
-   <li><a href="#dom-loadoptions-inputs">inputs</a><span>, in § 2</span>
-   <li><a href="#dom-mlmodelloader-load">load(modelBuffer, options)</a><span>, in § 2</span>
-   <li><a href="#dictdef-loadoptions">LoadOptions</a><span>, in § 2</span>
-   <li><a href="#mlmodel">MLModel</a><span>, in § 2</span>
+   <li><a href="#dom-mlcontextoptions-devicepreference">devicePreference</a><span>, in § 2</span>
+   <li><a href="#dom-mldevicepreference-gpu">"gpu"</a><span>, in § 2</span>
+   <li><a href="#dom-mlpowerpreference-high-performance">"high-performance"</a><span>, in § 2</span>
+   <li><a href="#dom-mlmodelloader-load">load(modelBuffer)</a><span>, in § 2</span>
+   <li><a href="#dom-mlpowerpreference-low-power">"low-power"</a><span>, in § 2</span>
+   <li><a href="#ml">ML</a><span>, in § 2</span>
+   <li><a href="#dictdef-mlcontextoptions">MLContextOptions</a><span>, in § 2</span>
+   <li><a href="#enumdef-mldevicepreference">MLDevicePreference</a><span>, in § 2</span>
    <li><a href="#enumdef-mlmodelformat">MLModelFormat</a><span>, in § 2</span>
+   <li><a href="#mlmodelloaded">MLModelLoaded</a><span>, in § 2</span>
+   <li><a href="#typedefdef-mlmodelloadedcomputeinput">MLModelLoadedComputeInput</a><span>, in § 2</span>
+   <li><a href="#typedefdef-mlmodelloadedcomputeoutput">MLModelLoadedComputeOutput</a><span>, in § 2</span>
    <li><a href="#mlmodelloader">MLModelLoader</a><span>, in § 2</span>
    <li><a href="#dom-mlmodelloader-mlmodelloader">MLModelLoader(context)</a><span>, in § 2</span>
-   <li><a href="#dictdef-mlmodelloadercontextoptions">MLModelLoaderContextOptions</a><span>, in § 2</span>
-   <li><a href="#dom-mlmodelloadercontextoptions-modelformat">modelFormat</a><span>, in § 2</span>
-   <li><a href="#dom-loadoptions-outputs">outputs</a><span>, in § 2</span>
+   <li><a href="#enumdef-mlpowerpreference">MLPowerPreference</a><span>, in § 2</span>
+   <li><a href="#dom-mlcontextoptions-modelformat">modelFormat</a><span>, in § 2</span>
+   <li><a href="#dom-mlcontextoptions-powerpreference">powerPreference</a><span>, in § 2</span>
    <li><a href="#dom-mlmodelformat-tflite">"tflite"</a><span>, in § 2</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-ArrayBufferView">
@@ -772,34 +825,34 @@ z_buffer <c- o>=</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>
     <li><a href="#ref-for-ArrayBufferView">2. API</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-DOMString">
+   <a href="https://webidl.spec.whatwg.org/#idl-DOMString">https://webidl.spec.whatwg.org/#idl-DOMString</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-DOMString">2. API</a> <a href="#ref-for-idl-DOMString①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-Exposed">
    <a href="https://webidl.spec.whatwg.org/#Exposed">https://webidl.spec.whatwg.org/#Exposed</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-Exposed">2. API</a> <a href="#ref-for-Exposed①">(2)</a>
+    <li><a href="#ref-for-Exposed">2. API</a> <a href="#ref-for-Exposed①">(2)</a> <a href="#ref-for-Exposed②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-promise">
    <a href="https://webidl.spec.whatwg.org/#idl-promise">https://webidl.spec.whatwg.org/#idl-promise</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-promise">2. API</a> <a href="#ref-for-idl-promise①">(2)</a>
+    <li><a href="#ref-for-idl-promise">2. API</a> <a href="#ref-for-idl-promise①">(2)</a> <a href="#ref-for-idl-promise②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-SecureContext">
    <a href="https://webidl.spec.whatwg.org/#SecureContext">https://webidl.spec.whatwg.org/#SecureContext</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-SecureContext">2. API</a> <a href="#ref-for-SecureContext①">(2)</a>
+    <li><a href="#ref-for-SecureContext">2. API</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-idl-undefined">
-   <a href="https://webidl.spec.whatwg.org/#idl-undefined">https://webidl.spec.whatwg.org/#idl-undefined</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-idl-record">
+   <a href="https://webidl.spec.whatwg.org/#idl-record">https://webidl.spec.whatwg.org/#idl-record</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-undefined">2. API</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-ml">
-   <a href="https://webmachinelearning.github.io/webnn/#ml">https://webmachinelearning.github.io/webnn/#ml</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-ml">2. API</a>
+    <li><a href="#ref-for-idl-record">2. API</a> <a href="#ref-for-idl-record①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-mlcontext">
@@ -808,43 +861,22 @@ z_buffer <c- o>=</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>
     <li><a href="#ref-for-mlcontext">2. API</a> <a href="#ref-for-mlcontext①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-dictdef-mlcontextoptions">
-   <a href="https://webmachinelearning.github.io/webnn/#dictdef-mlcontextoptions">https://webmachinelearning.github.io/webnn/#dictdef-mlcontextoptions</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dictdef-mlcontextoptions">2. API</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-typedefdef-mlnamedinputs">
-   <a href="https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedinputs">https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedinputs</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-typedefdef-mlnamedinputs">2. API</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-typedefdef-mlnamedoutputs">
-   <a href="https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedoutputs">https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedoutputs</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-typedefdef-mlnamedoutputs">2. API</a>
-   </ul>
-  </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-ArrayBufferView">ArrayBufferView</span>
+     <li><span class="dfn-paneled" id="term-for-idl-DOMString">DOMString</span>
      <li><span class="dfn-paneled" id="term-for-Exposed">Exposed</span>
      <li><span class="dfn-paneled" id="term-for-idl-promise">Promise</span>
      <li><span class="dfn-paneled" id="term-for-SecureContext">SecureContext</span>
-     <li><span class="dfn-paneled" id="term-for-idl-undefined">undefined</span>
+     <li><span class="dfn-paneled" id="term-for-idl-record">record</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webnn]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-ml">ML</span>
      <li><span class="dfn-paneled" id="term-for-mlcontext">MLContext</span>
-     <li><span class="dfn-paneled" id="term-for-dictdef-mlcontextoptions">MLContextOptions</span>
-     <li><span class="dfn-paneled" id="term-for-typedefdef-mlnamedinputs">MLNamedInputs</span>
-     <li><span class="dfn-paneled" id="term-for-typedefdef-mlnamedoutputs">MLNamedOutputs</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -855,35 +887,55 @@ z_buffer <c- o>=</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
    <dt id="biblio-webnn">[WEBNN]
-   <dd>Ningxin Hu; Chai Chaoweeraprasit. <a href="https://www.w3.org/TR/webnn/"><cite>Web Neural Network API</cite></a>. 25 November 2021. WD. URL: <a href="https://www.w3.org/TR/webnn/">https://www.w3.org/TR/webnn/</a>
+   <dd>Ningxin Hu; Chai Chaoweeraprasit. <a href="https://www.w3.org/TR/webnn/"><cite>Web Neural Network API</cite></a>. 15 December 2021. WD. URL: <a href="https://www.w3.org/TR/webnn/">https://www.w3.org/TR/webnn/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def"><c- b>enum</c-> <a href="#enumdef-mlmodelformat"><code><c- g>MLModelFormat</c-></code></a> { <a href="#dom-mlmodelformat-tflite"><code><c- s>"tflite"</c-></code></a> };
 
-<c- b>dictionary</c-> <a href="#dictdef-mlmodelloadercontextoptions"><code><c- g>MLModelLoaderContextOptions</c-></code></a> : <a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#dictdef-mlcontextoptions"><c- n>MLContextOptions</c-></a> {
-  <a data-link-type="idl-name" href="#enumdef-mlmodelformat"><c- n>MLModelFormat</c-></a> <a data-default="&quot;tflite&quot;" data-type="MLModelFormat " href="#dom-mlmodelloadercontextoptions-modelformat"><code><c- g>modelFormat</c-></code></a> = "tflite";
+<c- b>enum</c-> <a href="#enumdef-mldevicepreference"><code><c- g>MLDevicePreference</c-></code></a> {
+  <a href="#dom-mldevicepreference-gpu"><code><c- s>"gpu"</c-></code></a>,
+  <a href="#dom-mldevicepreference-cpu"><code><c- s>"cpu"</c-></code></a>
 };
 
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://webmachinelearning.github.io/webnn/#ml"><c- g>ML</c-></a> {
-  <a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#mlcontext"><c- n>MLContext</c-></a> <a href="#dom-ml-createcontext"><code><c- g>createContext</c-></code></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-mlmodelloadercontextoptions"><c- n>MLModelLoaderContextOptions</c-></a> <a href="#dom-ml-createcontext-options-options"><code><c- g>options</c-></code></a> = {});
+<c- b>enum</c-> <a href="#enumdef-mlpowerpreference"><code><c- g>MLPowerPreference</c-></code></a> {
+  // Prioritizes execution speed over power consumption.
+  <a href="#dom-mlpowerpreference-high-performance"><code><c- s>"high-performance"</c-></code></a>,
+  // Prioritizes power consumption over other considerations such as execution
+  // speed.
+  <a href="#dom-mlpowerpreference-low-power"><code><c- s>"low-power"</c-></code></a>,
 };
 
-<c- b>dictionary</c-> <a href="#dictdef-loadoptions"><code><c- g>LoadOptions</c-></code></a> {
-  // TBD InputNodes and OutputNodes
-  <c- b>required</c-> <a data-link-type="idl-name"><c- n>InputNodes</c-></a> <a data-type="InputNodes " href="#dom-loadoptions-inputs"><code><c- g>inputs</c-></code></a>;
-  <c- b>required</c-> <a data-link-type="idl-name"><c- n>OutputNodes</c-></a> <a data-type="OutputNodes " href="#dom-loadoptions-outputs"><code><c- g>outputs</c-></code></a>;
+<c- b>dictionary</c-> <a href="#dictdef-mlcontextoptions"><code><c- g>MLContextOptions</c-></code></a> {
+  // Preferred kind of device to use.
+  <a data-link-type="idl-name" href="#enumdef-mldevicepreference"><c- n>MLDevicePreference</c-></a> <a data-default="&quot;cpu&quot;" data-type="MLDevicePreference " href="#dom-mlcontextoptions-devicepreference"><code><c- g>devicePreference</c-></code></a> = "cpu";
+
+  // Preference as related to power consumption.
+  <a data-link-type="idl-name" href="#enumdef-mlpowerpreference"><c- n>MLPowerPreference</c-></a> <a data-default="&quot;low-power&quot;" data-type="MLPowerPreference " href="#dom-mlcontextoptions-powerpreference"><code><c- g>powerPreference</c-></code></a> = "low-power";
+
+  // Model format for the model loader API.
+  <a data-link-type="idl-name" href="#enumdef-mlmodelformat"><c- n>MLModelFormat</c-></a> <a data-default="&quot;tflite&quot;" data-type="MLModelFormat " href="#dom-mlcontextoptions-modelformat"><code><c- g>modelFormat</c-></code></a> = "tflite";
+};
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
+<c- b>interface</c-> <a href="#ml"><code><c- g>ML</c-></code></a> {
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#mlcontext"><c- n>MLContext</c-></a>> <a href="#dom-ml-createcontext"><code><c- g>createContext</c-></code></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-mlcontextoptions"><c- n>MLContextOptions</c-></a> <a href="#dom-ml-createcontext-options-options"><code><c- g>options</c-></code></a> = {});
+};
+
+<c- b>typedef</c-> (<a data-link-type="idl-name"><c- n>MLTensor</c-></a> <c- b>or</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-record"><c- b>record</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a>, <a data-link-type="idl-name"><c- n>MLTensor</c-></a>>) <a href="#typedefdef-mlmodelloadedcomputeinput"><code><c- g>MLModelLoadedComputeInput</c-></code></a>;
+<c- b>typedef</c-> (<a data-link-type="idl-name"><c- n>MLTensor</c-></a> <c- b>or</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-record"><c- b>record</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a>, <a data-link-type="idl-name"><c- n>MLTensor</c-></a>>) <a href="#typedefdef-mlmodelloadedcomputeoutput"><code><c- g>MLModelLoadedComputeOutput</c-></code></a>;
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
+<c- b>interface</c-> <a href="#mlmodelloaded"><code><c- g>MLModelLoaded</c-></code></a> {
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#typedefdef-mlmodelloadedcomputeoutput"><c- n>MLModelLoadedComputeOutput</c-></a>?> <a href="#dom-mlmodelloaded-compute"><code><c- g>compute</c-></code></a>(<a data-link-type="idl-name"><c- n>MLModelLoaderComputeInput</c-></a> <a href="#dom-mlmodelloaded-compute-inputs-outputs-inputs"><code><c- g>inputs</c-></code></a>, 
+                                                     <c- b>optional</c-> <a data-link-type="idl-name"><c- n>MLModelLoaderComputeInput</c-></a> <a href="#dom-mlmodelloaded-compute-inputs-outputs-outputs"><code><c- g>outputs</c-></code></a>);
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
 <c- b>interface</c-> <a href="#mlmodelloader"><code><c- g>MLModelLoader</c-></code></a> {
   <a href="#dom-mlmodelloader-mlmodelloader"><code><c- g>constructor</c-></code></a>(<a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#mlcontext"><c- n>MLContext</c-></a> <a href="#dom-mlmodelloader-mlmodelloader-context-context"><code><c- g>context</c-></code></a>);
-  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#mlmodel"><c- n>MLModel</c-></a>> <a href="#dom-mlmodelloader-load"><code><c- g>load</c-></code></a>(<a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView"><c- n>ArrayBufferView</c-></a> <a href="#dom-mlmodelloader-load-modelbuffer-options-modelbuffer"><code><c- g>modelBuffer</c-></code></a>, <a data-link-type="idl-name" href="#dictdef-loadoptions"><c- n>LoadOptions</c-></a> <a href="#dom-mlmodelloader-load-modelbuffer-options-options"><code><c- g>options</c-></code></a>);
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#mlmodelloaded"><c- n>MLModelLoaded</c-></a>> <a href="#dom-mlmodelloader-load"><code><c- g>load</c-></code></a>(<a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView"><c- n>ArrayBufferView</c-></a> <a href="#dom-mlmodelloader-load-modelbuffer-modelbuffer"><code><c- g>modelBuffer</c-></code></a>);
 };
 
-[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->, <c- n>DedicatedWorker</c->)]
-<c- b>interface</c-> <a href="#mlmodel"><code><c- g>MLModel</c-></code></a> {
-  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined"><c- b>undefined</c-></a>> <a href="#dom-mlmodel-compute"><code><c- g>compute</c-></code></a>(<a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedinputs"><c- n>MLNamedInputs</c-></a> <a href="#dom-mlmodel-compute-inputs-outputs-inputs"><code><c- g>inputs</c-></code></a>, <a data-link-type="idl-name" href="https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedoutputs"><c- n>MLNamedOutputs</c-></a> <a href="#dom-mlmodel-compute-inputs-outputs-outputs"><code><c- g>outputs</c-></code></a>);
-};
 
 </pre>
   <aside class="dfn-panel" data-for="enumdef-mlmodelformat">
@@ -892,22 +944,34 @@ z_buffer <c- o>=</c-> <c- k>new</c-> Float64Array<c- p>(</c-><c- mf>1</c-><c- p>
     <li><a href="#ref-for-enumdef-mlmodelformat">2. API</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dictdef-mlmodelloadercontextoptions">
-   <b><a href="#dictdef-mlmodelloadercontextoptions">#dictdef-mlmodelloadercontextoptions</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="enumdef-mldevicepreference">
+   <b><a href="#enumdef-mldevicepreference">#enumdef-mldevicepreference</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-mlmodelloadercontextoptions">2. API</a>
+    <li><a href="#ref-for-enumdef-mldevicepreference">2. API</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dictdef-loadoptions">
-   <b><a href="#dictdef-loadoptions">#dictdef-loadoptions</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="enumdef-mlpowerpreference">
+   <b><a href="#enumdef-mlpowerpreference">#enumdef-mlpowerpreference</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-loadoptions">2. API</a>
+    <li><a href="#ref-for-enumdef-mlpowerpreference">2. API</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="mlmodel">
-   <b><a href="#mlmodel">#mlmodel</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dictdef-mlcontextoptions">
+   <b><a href="#dictdef-mlcontextoptions">#dictdef-mlcontextoptions</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-mlmodel">2. API</a>
+    <li><a href="#ref-for-dictdef-mlcontextoptions">2. API</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="typedefdef-mlmodelloadedcomputeoutput">
+   <b><a href="#typedefdef-mlmodelloadedcomputeoutput">#typedefdef-mlmodelloadedcomputeoutput</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-typedefdef-mlmodelloadedcomputeoutput">2. API</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="mlmodelloaded">
+   <b><a href="#mlmodelloaded">#mlmodelloaded</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-mlmodelloaded">2. API</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
