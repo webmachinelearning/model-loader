@@ -246,17 +246,25 @@ The Model Loader API is currently included as a Tentative Specification in the
 Many thanks for valuable feedback and advice from:
 
 *   Alex Russell
+*   Alex Gough
 *   Anssi Kostiainen
+*   Bartosz Fabianowski
+*   Camille Lamy
 *   Chai Chaoweeraprasit
 *   Daniel Smilkov
 *   Dominique Hazael-Massieux
 *   Ganesan Ramalingam
+*   Glen Robertson
 *   Greg Whitworth
 *   James Darpinian
 *   Jeffrey Yaskin
 *   Jiewei Qian
 *   Jon Napper
 *   Kai Ninomiya
+*   Kaustubha Govind
+*   Mattias Nissler
 *   Nikhil Thorat
 *   Ningxin Hu
+*   Ping Yu
 *   Rafael Cintron
+*   Thomas Nattestad
