@@ -163,7 +163,7 @@ This requires further thought, by experts.
 
 It will be a lot of work. The browser will need to parse and validate the model in depth and provide sandboxing and
 process isolation. For example, in chromeOS, each model instance will be isolated in a dedicated process and
-sandbox, that is, even one web page loads two instances of the same model, each instance will be run in its own
+sandbox; that is, even one web page loads two instances of the same model, each instance will be run in its own
 process and sandbox.
 
 Fuzz testing can help for operations. Each hardware driver will need to be secured. Security will
