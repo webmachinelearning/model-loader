@@ -162,8 +162,16 @@ This requires further thought, by experts.
 # Security considerations
 
 It will be a lot of work. The browser will need to parse and validate the model in depth and provide sandboxing and
-process isolation. Fuzz testing can help for operations. Each hardware driver will need to be secured. Security will
+process isolation. For example, in chromeOS, each model instance will be isolated in a dedicated process and
+sandbox, that is, even one web page loads two instances of the same model, each instance will be run in its own
+process and sandbox.
+
+Fuzz testing can help for operations. Each hardware driver will need to be secured. Security will
 be a major part of the effort to implement general-purpose ML on the Web.
+
+Because the users are responsible for downloading the model, we can not restrict the origin of the model inside this
+API. So, depending on the users' feedback, we may provide optional CSP directive (e.g. "ml-model-src") to include
+the checksum of allowed models that this API can check against.
 
 # Privacy considerations
 
