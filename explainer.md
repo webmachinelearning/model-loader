@@ -169,9 +169,9 @@ process and sandbox.
 Fuzz testing can help for operations. Each hardware driver will need to be secured. Security will
 be a major part of the effort to implement general-purpose ML on the Web.
 
-Because the users are responsible for downloading the model, we can not restrict the origin of the model inside this
-API. So, depending on the users' feedback, we may provide optional CSP directive (e.g. "ml-model-src") to include
-the checksum of allowed models that this API can check against.
+Because developers are responsible for downloading the model, we cannot restrict the origin of the model inside
+this API. Depending on developer feedback and security concerns, we could restrict the API to execute a set of
+approved models based on the checksum using a CSP directive (e.g. "ml-model-src").
 
 # Privacy considerations
 
