@@ -245,8 +245,8 @@ The Model Loader API is currently included as a Tentative Specification in the
 
 Many thanks for valuable feedback and advice from:
 
-*   Alex Russell
 *   Alex Gough
+*   Alex Russell   
 *   Anssi Kostiainen
 *   Bartosz Fabianowski
 *   Camille Lamy
