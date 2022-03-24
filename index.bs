@@ -68,19 +68,19 @@ interface ML {
   Promise&lt;MLContext&gt; createContext(optional MLContextOptions options = {});
 };
 
-typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeInput;
-typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelLoadedComputeOutput;
+typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelComputeInput;
+typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelComputeOutput;
 
 [Exposed=(Window, DedicatedWorker)]
-interface MLModelLoaded {
-  Promise&lt;MLModelLoadedComputeOutput?&gt; compute(MLModelLoaderComputeInput inputs, 
+interface MLModel {
+  Promise&lt;MLModelComputeOutput?&gt; compute(MLModelLoaderComputeInput inputs, 
                                                      optional MLModelLoaderComputeInput outputs);
 };
 
 [SecureContext, Exposed=(Window, DedicatedWorker)]
 interface MLModelLoader {
   constructor(MLContext context);
-  Promise&lt;MLModelLoaded&gt; load(ArrayBufferView modelBuffer);
+  Promise&lt;MLModel&gt; load(ArrayBufferView modelBuffer);
 };
 
 </pre>
