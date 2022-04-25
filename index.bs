@@ -40,11 +40,14 @@ API {#api}
 enum MLModelFormat { "tflite" };
 
 enum MLDevicePreference {
+  "default",
   "gpu",
   "cpu"
 };
 
 enum MLPowerPreference {
+  // Let the user agent select the most suitable behavior.
+  "default",
   // Prioritizes execution speed over power consumption.
   "high-performance",
   // Prioritizes power consumption over other considerations such as execution
