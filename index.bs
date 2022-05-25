@@ -102,6 +102,21 @@ enum MLDataType {
   "bool",
 };
 
+dictionary MLTensor {
+  required MLResource data;
+  required sequence&lt;unsigned long&gt; dimensions;
+};
+
+// This should be aligned with WebNN. It is different from the spec of WebNN
+// because in the first version we do not involve any hardware acceleration. We
+// should update it later.
+typedef ArrayBufferView MLBufferView;
+
+// This should be aligned with WebNN. It is different from the spec of WebNN
+// because in the first version we do not involve any hardware acceleration. We
+// should update it later.
+typedef MLBufferView MLResource;
+
 dictionary MLTensorInfo {
   required DOMString name;
   required MLDataType type;
