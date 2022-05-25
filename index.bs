@@ -123,7 +123,7 @@ dictionary MLTensorInfo {
   required sequence&lt;unsigned long&gt; dimensions;
 };
 
-[SecureContext]
+[SecureContext, Exposed=()]
 interface MLModel {
   Promise&lt;record&lt;DOMString, MLTensor&gt;&gt; compute(record&lt;DOMString, MLTensor&gt; inputs);      
   sequence&lt;MLTensorInfo&gt; inputs();
