@@ -37,14 +37,24 @@ API {#api}
 ==========
 
 <pre class="idl">
-enum MLModelFormat { "tflite" };
+enum MLModelFormat {
+  // Tensorflow-lite flatbuffer.
+  "tflite" 
+};
 
 enum MLDevicePreference {
+  // Let the backend selects the most suitable device.
+  "auto",
+  // The backend will use GPU to do model inference. If some operator is not
+  // supported by GPU, it will fall back to CPU.
   "gpu",
+  // The backend will use CPU to do model inference.
   "cpu"
 };
 
 enum MLPowerPreference {
+  // Let the backend selects the most suitable behavior.
+  "auto",
   // Prioritizes execution speed over power consumption.
   "high-performance",
   // Prioritizes power consumption over other considerations such as execution
@@ -54,33 +64,76 @@ enum MLPowerPreference {
 
 dictionary MLContextOptions {
   // Preferred kind of device to use.
-  MLDevicePreference devicePreference = "cpu";
+  MLDevicePreference devicePreference = "auto";
 
   // Preference as related to power consumption.
-  MLPowerPreference powerPreference = "low-power";
+  MLPowerPreference powerPreference = "auto";
 
   // Model format for the model loader API.
   MLModelFormat modelFormat = "tflite";
+  
+  // Number of thread to use.
+  // "0" means the backend can determine it automatically.
+  unsigned long numThreads = 0;
 };
 
-[Exposed=(Window, DedicatedWorker)]
+[Exposed=Window]
 interface ML {
   Promise&lt;MLContext&gt; createContext(optional MLContextOptions options = {});
 };
 
-typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelComputeInput;
-typedef (MLTensor or record&lt;DOMString, MLTensor&gt;) MLModelComputeOutput;
-
-[Exposed=(Window, DedicatedWorker)]
-interface MLModel {
-  Promise&lt;MLModelComputeOutput?&gt; compute(MLModelLoaderComputeInput inputs, 
-                                                     optional MLModelLoaderComputeInput outputs);
+enum MLDataType {
+  // "Unknown" doesn't mean "unsupported". The background can support more types
+  // than which are explicitly listed here (e.g., TfLite has complex numbers).
+  // We treat them as "unknown" to avoid exposing too many details of the
+  // backends from the beginning.
+  "unknown",
+  "int64",
+  "uint64",
+  "float64",
+  "int32",
+  "uint32",
+  "float32",
+  "int16",
+  "uint16",
+  "float16",
+  "int8",
+  "uint8",
+  "bool",
 };
 
-[SecureContext, Exposed=(Window, DedicatedWorker)]
+dictionary MLTensor {
+  required MLResource data;
+  required sequence&lt;unsigned long&gt; dimensions;
+};
+
+// This should be aligned with WebNN. It is different from the spec of WebNN
+// because in the first version we do not involve any hardware acceleration. We
+// should update it later.
+typedef ArrayBufferView MLBufferView;
+
+// This should be aligned with WebNN. It is different from the spec of WebNN
+// because in the first version we do not involve any hardware acceleration. We
+// should update it later.
+typedef MLBufferView MLResource;
+
+dictionary MLTensorInfo {
+  required DOMString name;
+  required MLDataType type;
+  required sequence&lt;unsigned long&gt; dimensions;
+};
+
+[SecureContext, Exposed=Window]
+interface MLModel {
+  Promise&lt;record&lt;DOMString, MLTensor&gt;&gt; compute(record&lt;DOMString, MLTensor&gt; inputs);      
+  sequence&lt;MLTensorInfo&gt; inputs();
+  sequence&lt;MLTensorInfo&gt; outputs();
+};
+
+[Exposed=Window]
 interface MLModelLoader {
   constructor(MLContext context);
-  Promise&lt;MLModel&gt; load(ArrayBufferView modelBuffer);
+  Promise&lt;MLModel&gt; load(ArrayBuffer modelBuffer);
 };
 
 </pre>
