@@ -3,6 +3,7 @@ Title: Model Loader API
 Shortname: model-loader
 Level: 1
 Status: w3c/CG-DRAFT
+Status Text: <strong>This incubation is on pause, see <a href="https://github.com/webmachinelearning/model-loader/issues/36">discussion</a> for the latest updates.</strong>
 Group: webml
 URL: https://webmachinelearning.github.io/model-loader/
 !Explainer: <a href="https://github.com/webmachinelearning/model-loader/blob/master/explainer.md">explainer.md</a>
