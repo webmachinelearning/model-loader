@@ -5,10 +5,10 @@
   <title>Model Loader API</title>
   <meta content="w3c/CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 6edc88947, updated Thu Aug 17 11:18:09 2023 -0700" name="generator">
+  <meta content="Bikeshed version 82ce88815, updated Thu Sep 7 16:33:55 2023 -0700" name="generator">
   <link href="https://webmachinelearning.github.io/model-loader/" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="aab4dbf672b3fc3980a69435322cad777d836df6" name="document-revision">
+  <meta content="14b035e8922cb8dc715cd9c9d77727537f390afb" name="document-revision">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -649,7 +649,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://webmachinelearning.github.io/"> <img alt="Logo" height="100" src="https://webmachinelearning.github.io/webmachinelearning-logo.png" width="100"> </a> </p>
    <h1 class="p-name no-ref" id="title">Model Loader API</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-08-30">30 August 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2024-02-26">26 February 2024</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -666,7 +666,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </div>
    </details>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2023 the Contributors to the Model Loader API Specification, published by the <a href="https://www.w3.org/community/webmachinelearning/">Web Machine Learning Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2024 the Contributors to the Model Loader API Specification, published by the <a href="https://www.w3.org/community/webmachinelearning/">Web Machine Learning Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -782,19 +782,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mltensor"><code><c- g>MLTensor</c-></code></dfn> {
-  <c- b>required</c-> <a data-link-type="idl-name" href="#typedefdef-mlresource" id="ref-for-typedefdef-mlresource"><c- n>MLResource</c-></a> <dfn class="idl-code" data-dfn-for="MLTensor" data-dfn-type="dict-member" data-export data-type="MLResource " id="dom-mltensor-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-mltensor-data"></a></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView" id="ref-for-ArrayBufferView"><c- n>ArrayBufferView</c-></a> <dfn class="idl-code" data-dfn-for="MLTensor" data-dfn-type="dict-member" data-export data-type="ArrayBufferView " id="dom-mltensor-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-mltensor-data"></a></dfn>;
   <c- b>required</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-sequence" id="ref-for-idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long" id="ref-for-idl-unsigned-long①"><c- b>unsigned</c-> <c- b>long</c-></a>> <dfn class="idl-code" data-dfn-for="MLTensor" data-dfn-type="dict-member" data-export data-type="sequence<unsigned long> " id="dom-mltensor-dimensions"><code><c- g>dimensions</c-></code><a class="self-link" href="#dom-mltensor-dimensions"></a></dfn>;
 };
-
-// This should be aligned with WebNN. It is different from the spec of WebNN
-// because in the first version we do not involve any hardware acceleration. We
-// should update it later.
-<c- b>typedef</c-> <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView" id="ref-for-ArrayBufferView"><c- n>ArrayBufferView</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-mlbufferview"><code><c- g>MLBufferView</c-></code></dfn>;
-
-// This should be aligned with WebNN. It is different from the spec of WebNN
-// because in the first version we do not involve any hardware acceleration. We
-// should update it later.
-<c- b>typedef</c-> <a data-link-type="idl-name" href="#typedefdef-mlbufferview" id="ref-for-typedefdef-mlbufferview"><c- n>MLBufferView</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-mlresource"><code><c- g>MLResource</c-></code></dfn>;
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-mltensorinfo"><code><c- g>MLTensorInfo</c-></code></dfn> {
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="MLTensorInfo" data-dfn-type="dict-member" data-export data-type="DOMString " id="dom-mltensorinfo-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-mltensorinfo-name"></a></dfn>;
@@ -936,7 +926,6 @@ z_buffer <c- o>=</c-> ml<c- p>.</c->tensor<c- p>({</c->data<c- o>:</c-> <c- ow>n
    <li><a href="#dom-mlmodelloader-load">load(modelBuffer)</a><span>, in § 2</span>
    <li><a href="#dom-mlpowerpreference-low-power">"low-power"</a><span>, in § 2</span>
    <li><a href="#ml">ML</a><span>, in § 2</span>
-   <li><a href="#typedefdef-mlbufferview">MLBufferView</a><span>, in § 2</span>
    <li><a href="#dictdef-mlcontextoptions">MLContextOptions</a><span>, in § 2</span>
    <li><a href="#enumdef-mldatatype">MLDataType</a><span>, in § 2</span>
    <li><a href="#enumdef-mldevicepreference">MLDevicePreference</a><span>, in § 2</span>
@@ -945,7 +934,6 @@ z_buffer <c- o>=</c-> ml<c- p>.</c->tensor<c- p>({</c->data<c- o>:</c-> <c- ow>n
    <li><a href="#mlmodelloader">MLModelLoader</a><span>, in § 2</span>
    <li><a href="#dom-mlmodelloader-mlmodelloader">MLModelLoader(context)</a><span>, in § 2</span>
    <li><a href="#enumdef-mlpowerpreference">MLPowerPreference</a><span>, in § 2</span>
-   <li><a href="#typedefdef-mlresource">MLResource</a><span>, in § 2</span>
    <li><a href="#dictdef-mltensor">MLTensor</a><span>, in § 2</span>
    <li><a href="#dictdef-mltensorinfo">MLTensorInfo</a><span>, in § 2</span>
    <li><a href="#dom-mlcontextoptions-modelformat">modelFormat</a><span>, in § 2</span>
@@ -1059,19 +1047,9 @@ z_buffer <c- o>=</c-> ml<c- p>.</c->tensor<c- p>({</c->data<c- o>:</c-> <c- ow>n
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-mltensor"><code><c- g>MLTensor</c-></code></a> {
-  <c- b>required</c-> <a data-link-type="idl-name" href="#typedefdef-mlresource"><c- n>MLResource</c-></a> <a data-type="MLResource " href="#dom-mltensor-data"><code><c- g>data</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView"><c- n>ArrayBufferView</c-></a> <a data-type="ArrayBufferView " href="#dom-mltensor-data"><code><c- g>data</c-></code></a>;
   <c- b>required</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a>> <a data-type="sequence<unsigned long> " href="#dom-mltensor-dimensions"><code><c- g>dimensions</c-></code></a>;
 };
-
-// This should be aligned with WebNN. It is different from the spec of WebNN
-// because in the first version we do not involve any hardware acceleration. We
-// should update it later.
-<c- b>typedef</c-> <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#ArrayBufferView"><c- n>ArrayBufferView</c-></a> <a href="#typedefdef-mlbufferview"><code><c- g>MLBufferView</c-></code></a>;
-
-// This should be aligned with WebNN. It is different from the spec of WebNN
-// because in the first version we do not involve any hardware acceleration. We
-// should update it later.
-<c- b>typedef</c-> <a data-link-type="idl-name" href="#typedefdef-mlbufferview"><c- n>MLBufferView</c-></a> <a href="#typedefdef-mlresource"><code><c- g>MLResource</c-></code></a>;
 
 <c- b>dictionary</c-> <a href="#dictdef-mltensorinfo"><code><c- g>MLTensorInfo</c-></code></a> {
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-type="DOMString " href="#dom-mltensorinfo-name"><code><c- g>name</c-></code></a>;
@@ -1418,8 +1396,6 @@ window.dfnpanelData['enumdef-mlpowerpreference'] = {"dfnID": "enumdef-mlpowerpre
 window.dfnpanelData['dictdef-mlcontextoptions'] = {"dfnID": "dictdef-mlcontextoptions", "url": "#dictdef-mlcontextoptions", "dfnText": "MLContextOptions", "refSections": [{"refs": [{"id": "ref-for-dictdef-mlcontextoptions"}], "title": "2. API"}], "external": false};
 window.dfnpanelData['enumdef-mldatatype'] = {"dfnID": "enumdef-mldatatype", "url": "#enumdef-mldatatype", "dfnText": "MLDataType", "refSections": [{"refs": [{"id": "ref-for-enumdef-mldatatype"}], "title": "2. API"}], "external": false};
 window.dfnpanelData['dictdef-mltensor'] = {"dfnID": "dictdef-mltensor", "url": "#dictdef-mltensor", "dfnText": "MLTensor", "refSections": [{"refs": [{"id": "ref-for-dictdef-mltensor"}, {"id": "ref-for-dictdef-mltensor\u2460"}], "title": "2. API"}], "external": false};
-window.dfnpanelData['typedefdef-mlbufferview'] = {"dfnID": "typedefdef-mlbufferview", "url": "#typedefdef-mlbufferview", "dfnText": "MLBufferView", "refSections": [{"refs": [{"id": "ref-for-typedefdef-mlbufferview"}], "title": "2. API"}], "external": false};
-window.dfnpanelData['typedefdef-mlresource'] = {"dfnID": "typedefdef-mlresource", "url": "#typedefdef-mlresource", "dfnText": "MLResource", "refSections": [{"refs": [{"id": "ref-for-typedefdef-mlresource"}], "title": "2. API"}], "external": false};
 window.dfnpanelData['dictdef-mltensorinfo'] = {"dfnID": "dictdef-mltensorinfo", "url": "#dictdef-mltensorinfo", "dfnText": "MLTensorInfo", "refSections": [{"refs": [{"id": "ref-for-dictdef-mltensorinfo"}, {"id": "ref-for-dictdef-mltensorinfo\u2460"}], "title": "2. API"}], "external": false};
 window.dfnpanelData['mlmodel'] = {"dfnID": "mlmodel", "url": "#mlmodel", "dfnText": "MLModel", "refSections": [{"refs": [{"id": "ref-for-mlmodel"}], "title": "2. API"}], "external": false};
 </script>
